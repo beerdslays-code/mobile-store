@@ -3,170 +3,294 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Order History | BRIEFS</title>
+  <title>Order History | GameTop</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600&family=DM+Sans:wght@300;400;500&family=DM+Mono:wght@400&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;600;700;900&family=Syne:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
   <style>
-  :root {
-  --bg: #f5f3ef; --surface: #ffffff; --card: #faf9f7;
-  --border: #e8e4dc; --accent: #8b6914; --text: #1a1612;
-  --muted: #6b6560; --success: #27795a; --warning: #9a6c00;
-  --radius: 12px;
-}
+    :root {
+      --bg: #08080f;
+      --surface: #0f0f1a;
+      --card: #111120;
+      --border: rgba(255,255,255,0.07);
+      --accent: #6366f1;
+      --accent-2: #a855f7;
+      --gold: #f59e0b;
+      --text: #f0f0ff;
+      --muted: #7878a0;
+      --success: #10b981;
+      --warning: #f59e0b;
+      --danger: #ef4444;
+      --radius: 16px;
+    }
+
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
     body {
-      background: var(--bg); color: var(--text);
-      font-family: 'DM Sans', sans-serif; font-weight: 300; min-height: 100vh;
+      background: var(--bg);
+      color: var(--text);
+      font-family: 'Syne', sans-serif;
+      font-weight: 400;
+      min-height: 100vh;
+      -webkit-font-smoothing: antialiased;
     }
+
+    /* Noise */
+    body::before {
+      content: '';
+      position: fixed; inset: 0; z-index: 0;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E");
+      pointer-events: none;
+    }
+
     nav {
-      position: sticky; top: 0; z-index: 100;
-    background: rgba(245, 243, 239, 0.92);
-      backdrop-filter: blur(16px);
-      border-bottom: 1px solid var(--border);
+      position: sticky; top: 0; z-index: 200;
       display: flex; align-items: center; justify-content: space-between;
-      padding: 0 48px; height: 68px;
+      padding: 0 6vw; height: 72px;
+      background: rgba(8,8,15,0.88);
+      backdrop-filter: blur(24px);
+      border-bottom: 1px solid var(--border);
     }
+
     .nav-logo {
-      font-family: 'Playfair Display', serif; font-size: 1.5rem;
-      letter-spacing: 0.12em; color: var(--accent); text-decoration: none;
+      font-family: 'Orbitron', monospace;
+      font-weight: 900; font-size: 1.35rem;
+      letter-spacing: 0.08em;
+      text-decoration: none;
+      background: linear-gradient(135deg, var(--accent), var(--accent-2));
+      -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+      background-clip: text;
     }
+
     .nav-back {
-      color: var(--muted); text-decoration: none; font-size: 0.85rem;
-      letter-spacing: 0.08em; text-transform: uppercase;
+      color: var(--muted); text-decoration: none;
+      font-size: 0.8rem; font-weight: 600;
+      letter-spacing: 0.1em; text-transform: uppercase;
       transition: color 0.2s;
+      display: flex; align-items: center; gap: 6px;
     }
     .nav-back:hover { color: var(--text); }
 
-    .page { max-width: 960px; margin: 0 auto; padding: 60px 48px 100px; }
-    .page-label { font-size: 0.75rem; letter-spacing: 0.2em; text-transform: uppercase; color: var(--accent); margin-bottom: 10px; }
-    .page-title { font-family: 'Playfair Display', serif; font-size: 2rem; margin-bottom: 40px; }
+    .page {
+      max-width: 1100px; margin: 0 auto;
+      padding: 60px 6vw 100px;
+      position: relative; z-index: 1;
+    }
 
+    .page-header {
+      display: flex; align-items: flex-end; justify-content: space-between;
+      margin-bottom: 48px; flex-wrap: wrap; gap: 20px;
+    }
+
+    .page-label {
+      font-size: 0.72rem; font-weight: 700;
+      letter-spacing: 0.22em; text-transform: uppercase;
+      color: var(--accent); margin-bottom: 10px;
+    }
+
+    .page-title {
+      font-family: 'Orbitron', monospace;
+      font-size: clamp(1.5rem, 3vw, 2.2rem);
+      font-weight: 800;
+    }
+
+    .page-count {
+      background: rgba(99,102,241,0.1);
+      border: 1px solid rgba(99,102,241,0.25);
+      color: #a5b4fc;
+      font-size: 0.8rem; font-weight: 600;
+      padding: 8px 18px; border-radius: 100px;
+    }
+
+    /* Empty state */
     .empty-state {
-      text-align: center; padding: 80px 20px; color: var(--muted);
+      text-align: center; padding: 100px 20px; color: var(--muted);
     }
-    .empty-icon { font-size: 3rem; margin-bottom: 16px; }
-    .empty-msg { font-size: 1rem; margin-bottom: 20px; }
+    .empty-icon { font-size: 4rem; margin-bottom: 20px; }
+    .empty-msg { font-size: 1.05rem; margin-bottom: 8px; color: var(--text); font-weight: 600; }
+    .empty-sub { font-size: 0.88rem; color: var(--muted); margin-bottom: 32px; }
     .empty-link {
-      display: inline-block;
-      border: 1px solid var(--accent); color: var(--accent);
-      text-decoration: none; padding: 10px 24px; border-radius: 8px;
-      font-size: 0.85rem; letter-spacing: 0.08em; text-transform: uppercase;
-      transition: background 0.2s, color 0.2s;
+      display: inline-flex; align-items: center; gap: 8px;
+      background: linear-gradient(135deg, var(--accent), var(--accent-2));
+      color: #fff;
+      text-decoration: none; padding: 14px 32px; border-radius: 12px;
+      font-size: 0.88rem; font-weight: 700; letter-spacing: 0.08em;
+      text-transform: uppercase;
+      transition: opacity 0.2s, transform 0.2s;
     }
-    .empty-link:hover { background: var(--accent); color: #0e0e0e; }
+    .empty-link:hover { opacity: 0.85; transform: translateY(-2px); }
 
-    .orders-table-wrap { overflow-x: auto; }
-    table {
-      width: 100%; border-collapse: collapse;
+    /* Cards layout */
+    .orders-list {
+      display: flex; flex-direction: column; gap: 16px;
     }
-    thead tr {
-      border-bottom: 1px solid var(--border);
+
+    .order-card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 22px 26px;
+      display: grid;
+      grid-template-columns: auto 1fr auto;
+      gap: 20px;
+      align-items: center;
+      transition: border-color 0.25s, transform 0.25s;
+      animation: slideIn 0.4s ease both;
     }
-    th {
-      font-size: 0.7rem; letter-spacing: 0.14em; text-transform: uppercase;
-      color: var(--muted); font-weight: 400; padding: 12px 16px; text-align: left;
+
+    .order-card:nth-child(1) { animation-delay: 0.05s; }
+    .order-card:nth-child(2) { animation-delay: 0.1s; }
+    .order-card:nth-child(3) { animation-delay: 0.15s; }
+    .order-card:nth-child(4) { animation-delay: 0.2s; }
+    .order-card:nth-child(5) { animation-delay: 0.25s; }
+
+    @keyframes slideIn {
+      from { opacity: 0; transform: translateY(16px); }
+      to { opacity: 1; transform: translateY(0); }
     }
-    td {
-      padding: 16px 16px; font-size: 0.88rem; border-bottom: 1px solid var(--border);
-      vertical-align: middle;
+
+    .order-card:hover {
+      border-color: rgba(99,102,241,0.25);
+      transform: translateX(4px);
     }
-    tr:last-child td { border-bottom: none; }
-    tr:hover td { background: rgba(255,255,255,0.02); }
+
+    .order-index {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.8rem; font-weight: 500;
+      color: var(--muted);
+      width: 32px; text-align: center;
+    }
+
+    .order-info {}
+
+    .order-game {
+      font-family: 'Orbitron', monospace;
+      font-size: 0.95rem; font-weight: 700;
+      margin-bottom: 6px;
+    }
+
+    .order-meta {
+      display: flex; flex-wrap: wrap; gap: 8px; align-items: center;
+    }
 
     .badge {
-      display: inline-block;
-      font-size: 0.68rem; letter-spacing: 0.1em; text-transform: uppercase;
-      padding: 3px 10px; border-radius: 100px;
+      display: inline-flex; align-items: center; gap: 4px;
+      font-size: 0.65rem; font-weight: 700;
+      letter-spacing: 0.1em; text-transform: uppercase;
+      padding: 4px 10px; border-radius: 6px;
     }
-    .badge-original { background: rgba(201,168,76,0.15); color: var(--accent); border: 1px solid rgba(201,168,76,0.3); }
-    .badge-secondhand { background: rgba(136,136,136,0.12); color: var(--muted); border: 1px solid var(--border); }
-    .badge-pending { background: rgba(224,168,76,0.12); color: var(--warning); border: 1px solid rgba(224,168,76,0.3); }
-    .badge-confirmed { background: rgba(91,191,138,0.12); color: var(--success); border: 1px solid rgba(91,191,138,0.3); }
 
-    .total-price { font-family: 'DM Mono', monospace; color: var(--accent); }
+    .badge-gcash { background: rgba(0,155,228,0.12); color: #38bdf8; border: 1px solid rgba(0,155,228,0.2); }
+    .badge-cash { background: rgba(74,222,128,0.1); color: #4ade80; border: 1px solid rgba(74,222,128,0.2); }
+    .badge-card { background: rgba(251,191,36,0.1); color: #fbbf24; border: 1px solid rgba(251,191,36,0.2); }
+    .badge-bank { background: rgba(168,85,247,0.1); color: #c084fc; border: 1px solid rgba(168,85,247,0.2); }
+    .badge-pending { background: rgba(245,158,11,0.1); color: var(--warning); border: 1px solid rgba(245,158,11,0.2); }
+    .badge-confirmed { background: rgba(16,185,129,0.1); color: var(--success); border: 1px solid rgba(16,185,129,0.2); }
+
+    .order-customer {
+      font-size: 0.8rem; color: var(--muted); margin-top: 4px;
+    }
+
+    .order-right {
+      text-align: right; flex-shrink: 0;
+    }
+
+    .order-total {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 1.2rem; font-weight: 500;
+      color: var(--gold);
+      margin-bottom: 6px;
+    }
+
+    .order-date {
+      font-size: 0.72rem; color: var(--muted);
+    }
+
+    .order-status-row {
+      display: flex; justify-content: flex-end; margin-top: 6px;
+    }
 
     footer {
-      border-top: 1px solid var(--border); padding: 28px 48px;
-      color: var(--muted); font-size: 0.8rem;
+      border-top: 1px solid var(--border);
+      padding: 28px 6vw; color: var(--muted); font-size: 0.82rem;
+      background: rgba(0,0,0,0.3); position: relative; z-index: 1;
     }
 
-    @media (max-width: 768px) {
-      nav, .page, footer { padding-left: 20px; padding-right: 20px; }
+    @media (max-width: 640px) {
+      nav { padding: 0 4vw; }
+      .page { padding: 40px 4vw 80px; }
+      .order-card {
+        grid-template-columns: auto 1fr;
+        grid-template-rows: auto auto;
+      }
+      .order-right {
+        grid-column: 2;
+        text-align: left;
+      }
     }
   </style>
 </head>
 <body>
 
 <nav>
-  <a class="nav-logo" href="/">B R I E F S</a>
-  <a class="nav-back" href="/">← Back to Shop</a>
+  <a class="nav-logo" href="/">GAMETOP</a>
+  <a class="nav-back" href="/">← Back to Games</a>
 </nav>
 
 <div class="page">
-  <div class="page-label">History</div>
-  <h1 class="page-title">Order History</h1>
+  <div class="page-header">
+    <div>
+      <div class="page-label">History</div>
+      <h1 class="page-title">Order History</h1>
+    </div>
+    {% if orders %}
+    <div class="page-count">{{ orders | length }} order{{ 's' if orders | length != 1 }}</div>
+    {% endif %}
+  </div>
 
   {% if not orders %}
   <div class="empty-state">
-    <div class="empty-icon">📋</div>
+    <div class="empty-icon">🎮</div>
     <div class="empty-msg">No orders yet.</div>
-    <a href="/" class="empty-link">Start Shopping</a>
+    <div class="empty-sub">Start topping up your favorite games!</div>
+    <a href="/" class="empty-link">⚡ Browse Games</a>
   </div>
   {% else %}
-  <div class="orders-table-wrap">
-    <table>
-      <thead>
-        <tr>
-          <th>#</th>
-          <th>Product</th>
-          <th>Condition</th>
-          <th>Qty</th>
-          <th>Payment</th>
-          <th>Total</th>
-          <th>Status</th>
-          <th>Date</th>
-        </tr>
-      </thead>
-      <tbody>
-        {% for order in orders %}
-        <tr>
-          <td style="color:var(--muted);font-size:0.75rem;font-family:'DM Mono',monospace;">
-            {{ loop.index }}
-          </td>
-          <td>
-            <div style="font-weight:500;">{{ order.product_name }}</div>
-            <div style="font-size:0.75rem;color:var(--muted);">{{ order.customer_name }}</div>
-          </td>
-          <td>
-            {% if order.condition == 'original' %}
-            <span class="badge badge-original">Original</span>
-            {% else %}
-            <span class="badge badge-secondhand">2nd Hand</span>
-            {% endif %}
-          </td>
-          <td>{{ order.quantity }}</td>
-          <td style="text-transform:capitalize;font-size:0.82rem;">
-            {{ order.payment_method | replace('_', ' ') }}
-          </td>
-          <td class="total-price">₱{{ "%.2f"|format(order.total_price) }}</td>
-          <td>
-            {% if order.status == 'confirmed' %}
-            <span class="badge badge-confirmed">Confirmed</span>
-            {% else %}
-            <span class="badge badge-pending">{{ order.status | capitalize }}</span>
-            {% endif %}
-          </td>
-          <td style="font-size:0.78rem;color:var(--muted);">
-            {{ order.created_at[:10] if order.created_at else '—' }}
-          </td>
-        </tr>
-        {% endfor %}
-      </tbody>
-    </table>
+  <div class="orders-list">
+    {% for order in orders %}
+    <div class="order-card">
+      <div class="order-index">#{{ loop.index }}</div>
+      <div class="order-info">
+        <div class="order-game">{{ order.product_name }}</div>
+        <div class="order-meta">
+          {% set pm = order.payment_method %}
+          {% if pm == 'gcash' %}
+            <span class="badge badge-gcash">💙 GCash</span>
+          {% elif pm == 'credit_card' %}
+            <span class="badge badge-card">💳 Card</span>
+          {% elif pm == 'bank_transfer' %}
+            <span class="badge badge-bank">🟢 Maya</span>
+          {% else %}
+            <span class="badge badge-cash">💵 Cash</span>
+          {% endif %}
+
+          {% if order.status == 'confirmed' %}
+            <span class="badge badge-confirmed">✓ Confirmed</span>
+          {% else %}
+            <span class="badge badge-pending">⏳ {{ order.status | capitalize }}</span>
+          {% endif %}
+        </div>
+        <div class="order-customer">{{ order.customer_name }} · {{ order.customer_email }}</div>
+      </div>
+      <div class="order-right">
+        <div class="order-total">₱{{ "%.2f"|format(order.total_price) }}</div>
+        <div class="order-date">{{ order.created_at[:10] if order.created_at else '—' }}</div>
+      </div>
+    </div>
+    {% endfor %}
   </div>
   {% endif %}
 </div>
 
-<footer>© 2025 BRIEFS for Men. School Project.</footer>
+<footer>© 2025 GameTop. School Project.</footer>
 </body>
 </html>
