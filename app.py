@@ -14,7 +14,7 @@ app.secret_key = os.environ.get("SECRET_KEY", "dev-secret-key")
 # --- DATABASE HELPERS ---
 
 def get_products():
-    """Fetch all game products from Supabase."""
+    """Fetch all phone products from Supabase."""
     try:
         supabase = get_supabase()
         response = supabase.table("products").select("*").execute()
@@ -25,7 +25,7 @@ def get_products():
 
 
 def get_product_by_id(product_id: str):
-    """Fetch a single game product by ID."""
+    """Fetch a single phone product by ID."""
     try:
         supabase = get_supabase()
         response = (
@@ -55,39 +55,40 @@ def place_order():
 
     try:
         product_id = data.get("product_id")
-        quantity = int(data.get("quantity", 1))
+        quantity   = int(data.get("quantity", 1))
     except (ValueError, TypeError):
         return jsonify({"success": False, "message": "Invalid quantity."}), 400
 
-    payment_method = data.get("payment_method", "gcash")
-    customer_name  = data.get("customer_name", "").strip()
-    customer_email = data.get("customer_email", "").strip()
-    game_uid       = data.get("game_uid", "").strip()
-    game_server    = data.get("game_server", "").strip()
-    denom_label    = data.get("denom_label", "").strip()
-    unit_price     = float(data.get("unit_price", 0))
-    total_price    = float(data.get("total_price", unit_price * quantity))
-    product_name   = data.get("product_name", "")
+    payment_method  = data.get("payment_method", "gcash")
+    customer_name   = data.get("customer_name", "").strip()
+    customer_email  = data.get("customer_email", "").strip()
+    customer_phone  = data.get("customer_phone", "").strip()
+    delivery_address = data.get("delivery_address", "").strip()
+    variant_label   = data.get("variant_label", "").strip()
+    unit_price      = float(data.get("unit_price", 0))
+    total_price     = float(data.get("total_price", unit_price * quantity))
+    product_name    = data.get("product_name", "")
+    condition       = data.get("condition", "brand_new")
 
     # Validate product exists
     product = get_product_by_id(product_id)
     if not product:
-        return jsonify({"success": False, "message": "Game not found."}), 404
+        return jsonify({"success": False, "message": "Product not found."}), 404
 
     order_data = {
-        "product_id":     product_id,
-        "product_name":   product.get("name", product_name),
-        "quantity":       quantity,
-        "condition":      "original",
-        "payment_method": payment_method,
-        "unit_price":     unit_price,
-        "total_price":    total_price,
-        "customer_name":  customer_name,
-        "customer_email": customer_email,
-        "game_uid":       game_uid,
-        "game_server":    game_server,
-        "denom_label":    denom_label,
-        "status":         "pending",
+        "product_id":       product_id,
+        "product_name":     product.get("name", product_name),
+        "quantity":         quantity,
+        "condition":        condition,
+        "payment_method":   payment_method,
+        "unit_price":       unit_price,
+        "total_price":      total_price,
+        "customer_name":    customer_name,
+        "customer_email":   customer_email,
+        "game_uid":         customer_phone,      # reusing field for phone number
+        "game_server":      delivery_address,    # reusing field for delivery address
+        "denom_label":      variant_label,       # reusing field for variant (color/storage)
+        "status":           "pending",
     }
 
     pay_result = payment_service.process_payment(order_data)

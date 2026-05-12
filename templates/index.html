@@ -3,389 +3,650 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>GameTop — Instant Game Top-Up</title>
+  <title>PISON — Premium Smartphones</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;600;700;900&family=Syne:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;0,700;1,300;1,400&family=DM+Sans:ital,wght@0,300;0,400;0,500;0,600;1,300&family=DM+Mono:wght@300;400;500&display=swap" rel="stylesheet">
   <style>
     :root {
-      --bg: #08080f;
-      --surface: #0f0f1a;
-      --card: #111120;
-      --card-hover: #161628;
-      --border: rgba(255,255,255,0.07);
-      --border-glow: rgba(99,102,241,0.4);
-      --accent: #6366f1;
-      --accent-2: #a855f7;
-      --accent-3: #06b6d4;
-      --gold: #f59e0b;
-      --text: #f0f0ff;
-      --muted: #7878a0;
-      --danger: #ef4444;
-      --success: #10b981;
-      --radius: 20px;
-      --radius-sm: 12px;
+      --cream:       #F5F0E8;
+      --cream-dark:  #EDE7D9;
+      --parchment:   #E8DFC9;
+      --ink:         #1A1714;
+      --ink-light:   #2D2926;
+      --warm-grey:   #7A736A;
+      --warm-mid:    #4A4540;
+      --copper:      #B5733A;
+      --copper-light:#D4925A;
+      --copper-pale: rgba(181,115,58,0.12);
+      --gold:        #C9993A;
+      --white:       #FDFAF5;
+      --border:      rgba(26,23,20,0.10);
+      --border-mid:  rgba(26,23,20,0.18);
+      --shadow-sm:   0 2px 12px rgba(26,23,20,0.08);
+      --shadow-md:   0 8px 32px rgba(26,23,20,0.12);
+      --shadow-lg:   0 24px 64px rgba(26,23,20,0.16);
+      --radius:      4px;
+      --radius-lg:   12px;
     }
 
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-
     html { scroll-behavior: smooth; }
 
     body {
-      background: var(--bg);
-      color: var(--text);
-      font-family: 'Syne', sans-serif;
-      font-weight: 400;
+      background: var(--cream);
+      color: var(--ink);
+      font-family: 'DM Sans', sans-serif;
+      font-weight: 300;
       min-height: 100vh;
       overflow-x: hidden;
       -webkit-font-smoothing: antialiased;
     }
 
-    /* ── NOISE OVERLAY ── */
-    body::before {
+    /* ── GRAIN TEXTURE ── */
+    body::after {
       content: '';
-      position: fixed; inset: 0; z-index: 0;
-      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E");
+      position: fixed; inset: 0; z-index: 9999;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 512 512' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='g'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23g)' opacity='0.03'/%3E%3C/svg%3E");
       pointer-events: none;
+      opacity: 0.6;
     }
 
     /* ── NAV ── */
     nav {
-      position: sticky; top: 0; z-index: 200;
+      position: sticky; top: 0; z-index: 500;
       display: flex; align-items: center; justify-content: space-between;
       padding: 0 6vw;
-      height: 72px;
-      background: rgba(8,8,15,0.85);
-      backdrop-filter: blur(24px) saturate(180%);
+      height: 68px;
+      background: rgba(245,240,232,0.92);
+      backdrop-filter: blur(20px) saturate(160%);
       border-bottom: 1px solid var(--border);
     }
 
     .nav-logo {
-      font-family: 'Orbitron', monospace;
-      font-weight: 900;
-      font-size: 1.35rem;
-      letter-spacing: 0.08em;
+      font-family: 'Cormorant Garamond', serif;
+      font-weight: 700;
+      font-size: 1.6rem;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--ink);
       text-decoration: none;
-      background: linear-gradient(135deg, var(--accent), var(--accent-2));
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-      background-clip: text;
     }
+
+    .nav-logo span {
+      color: var(--copper);
+    }
+
+    .nav-center {
+      display: flex; gap: 36px;
+    }
+
+    .nav-center a {
+      font-size: 0.72rem;
+      font-weight: 500;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+      color: var(--warm-grey);
+      text-decoration: none;
+      transition: color 0.2s;
+    }
+    .nav-center a:hover { color: var(--ink); }
 
     .nav-right {
-      display: flex; align-items: center; gap: 32px;
+      display: flex; align-items: center; gap: 16px;
     }
 
-    .nav-links {
-      display: flex; gap: 32px; list-style: none;
-    }
-
-    .nav-links a {
-      color: var(--muted);
-      text-decoration: none;
-      font-size: 0.82rem;
-      font-weight: 600;
-      letter-spacing: 0.08em;
+    .nav-orders {
+      font-size: 0.7rem;
+      font-weight: 500;
+      letter-spacing: 0.14em;
       text-transform: uppercase;
-      transition: color 0.25s;
-    }
-    .nav-links a:hover { color: var(--text); }
-
-    .nav-badge {
-      background: linear-gradient(135deg, var(--accent), var(--accent-2));
-      color: #fff;
-      font-size: 0.72rem;
-      font-weight: 700;
-      letter-spacing: 0.08em;
-      text-transform: uppercase;
-      padding: 7px 16px;
-      border-radius: 100px;
+      color: var(--ink);
       text-decoration: none;
-      transition: opacity 0.2s, transform 0.2s;
+      border-bottom: 1px solid var(--copper);
+      padding-bottom: 2px;
+      transition: color 0.2s, border-color 0.2s;
     }
-    .nav-badge:hover { opacity: 0.85; transform: translateY(-1px); }
+    .nav-orders:hover { color: var(--copper); }
 
     /* ── HERO ── */
     .hero {
       position: relative;
-      padding: 90px 6vw 80px;
-      text-align: center;
+      padding: 80px 6vw 64px;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 60px;
+      align-items: center;
+      max-width: 1400px;
+      margin: 0 auto;
       overflow: hidden;
     }
 
-    .hero-glow {
+    .hero::before {
+      content: '';
       position: absolute;
-      top: -100px; left: 50%; transform: translateX(-50%);
-      width: 900px; height: 500px;
-      background: radial-gradient(ellipse at center, rgba(99,102,241,0.18) 0%, rgba(168,85,247,0.08) 50%, transparent 70%);
+      right: -80px; top: -60px;
+      width: 600px; height: 600px;
+      background: radial-gradient(ellipse, rgba(181,115,58,0.08) 0%, transparent 70%);
       pointer-events: none;
     }
 
-    .hero-eyebrow {
+    .hero-badge {
       display: inline-flex; align-items: center; gap: 8px;
-      background: rgba(99,102,241,0.1);
-      border: 1px solid rgba(99,102,241,0.3);
-      color: #a5b4fc;
-      font-size: 0.72rem;
-      font-weight: 700;
+      font-family: 'DM Mono', monospace;
+      font-size: 0.65rem;
       letter-spacing: 0.2em;
       text-transform: uppercase;
-      padding: 7px 18px;
-      border-radius: 100px;
-      margin-bottom: 28px;
-    }
-
-    .hero-eyebrow::before {
-      content: '';
-      width: 6px; height: 6px;
-      background: #6366f1;
-      border-radius: 50%;
-      animation: pulse-dot 2s infinite;
-    }
-
-    @keyframes pulse-dot {
-      0%, 100% { opacity: 1; transform: scale(1); }
-      50% { opacity: 0.5; transform: scale(0.8); }
-    }
-
-    .hero h1 {
-      font-family: 'Orbitron', monospace;
-      font-size: clamp(2.2rem, 5.5vw, 4rem);
-      font-weight: 900;
-      line-height: 1.1;
-      letter-spacing: -0.02em;
+      color: var(--copper);
       margin-bottom: 20px;
     }
 
-    .hero h1 .grad {
-      background: linear-gradient(135deg, #a5b4fc 0%, #c084fc 50%, #67e8f9 100%);
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-      background-clip: text;
+    .hero-badge::before {
+      content: '';
+      display: block;
+      width: 24px; height: 1px;
+      background: var(--copper);
     }
 
-    .hero p {
-      color: var(--muted);
-      font-size: 1.05rem;
-      line-height: 1.75;
-      max-width: 520px;
-      margin: 0 auto 44px;
+    .hero h1 {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: clamp(3rem, 5.5vw, 5rem);
+      font-weight: 300;
+      line-height: 1.05;
+      letter-spacing: -0.01em;
+      color: var(--ink);
+      margin-bottom: 24px;
     }
 
-    .hero-stats {
-      display: flex; justify-content: center; gap: 48px;
-      flex-wrap: wrap;
+    .hero h1 em {
+      font-style: italic;
+      color: var(--copper);
+    }
+
+    .hero-sub {
+      font-size: 0.92rem;
+      font-weight: 300;
+      color: var(--warm-grey);
+      line-height: 1.8;
+      max-width: 380px;
+      margin-bottom: 40px;
+    }
+
+    .hero-cta-row {
+      display: flex; align-items: center; gap: 28px;
+    }
+
+    .btn-primary {
+      background: var(--ink);
+      color: var(--cream);
+      font-family: 'DM Sans', sans-serif;
+      font-size: 0.72rem;
+      font-weight: 500;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      padding: 14px 32px;
+      border: none; border-radius: var(--radius);
+      cursor: pointer;
+      text-decoration: none;
+      display: inline-block;
+      transition: all 0.3s ease;
+    }
+    .btn-primary:hover {
+      background: var(--copper);
+      transform: translateY(-1px);
+      box-shadow: 0 6px 20px rgba(181,115,58,0.3);
+    }
+
+    .hero-link {
+      font-size: 0.72rem;
+      font-weight: 500;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: var(--warm-grey);
+      text-decoration: none;
+      display: flex; align-items: center; gap: 8px;
+      transition: color 0.2s;
+    }
+    .hero-link:hover { color: var(--ink); }
+    .hero-link::after {
+      content: '→';
+      transition: transform 0.2s;
+    }
+    .hero-link:hover::after { transform: translateX(4px); }
+
+    .hero-visual {
+      position: relative;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .hero-phone-stage {
+      position: relative;
+      width: 280px; height: 480px;
+    }
+
+    .hero-phone-bg {
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(145deg, var(--parchment), var(--cream-dark));
+      border-radius: 40px;
+      border: 1px solid var(--border-mid);
+      box-shadow: var(--shadow-lg),
+                  inset 0 1px 0 rgba(255,255,255,0.6);
+    }
+
+    .hero-phone-img {
+      position: relative; z-index: 2;
+      width: 100%; height: 100%;
+      object-fit: cover;
+      border-radius: 40px;
+    }
+
+    .hero-phone-accent {
+      position: absolute;
+      bottom: -20px; right: -20px;
+      width: 120px; height: 120px;
+      border: 1px solid rgba(181,115,58,0.2);
+      border-radius: 50%;
+    }
+
+    .hero-phone-accent::before {
+      content: '';
+      position: absolute;
+      inset: 12px;
+      border: 1px solid rgba(181,115,58,0.12);
+      border-radius: 50%;
+    }
+
+    .hero-stats-strip {
+      display: flex;
+      gap: 0;
+      border-top: 1px solid var(--border);
+      border-bottom: 1px solid var(--border);
+      margin: 0 0 60px;
+      background: var(--white);
     }
 
     .hero-stat {
-      text-align: center;
+      flex: 1;
+      padding: 24px 6vw;
+      border-right: 1px solid var(--border);
+      display: flex; align-items: center; gap: 16px;
+    }
+    .hero-stat:last-child { border-right: none; }
+
+    .hero-stat-num {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 2rem; font-weight: 600;
+      color: var(--copper);
+      line-height: 1;
     }
 
-    .hero-stat-val {
-      font-family: 'Orbitron', monospace;
-      font-size: 1.6rem;
-      font-weight: 700;
-      background: linear-gradient(135deg, var(--accent), var(--accent-2));
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-      background-clip: text;
-    }
-
-    .hero-stat-lbl {
-      font-size: 0.72rem;
-      font-weight: 600;
-      letter-spacing: 0.12em;
+    .hero-stat-txt {
+      font-size: 0.7rem;
+      font-weight: 500;
+      letter-spacing: 0.1em;
       text-transform: uppercase;
-      color: var(--muted);
-      margin-top: 4px;
+      color: var(--warm-grey);
+      line-height: 1.5;
+    }
+
+    /* ── MARQUEE ── */
+    .marquee-track {
+      overflow: hidden;
+      background: var(--ink);
+      padding: 14px 0;
+      margin-bottom: 0;
+    }
+
+    .marquee-inner {
+      display: flex;
+      gap: 0;
+      animation: marquee 22s linear infinite;
+      white-space: nowrap;
+    }
+
+    .marquee-inner span {
+      font-family: 'DM Mono', monospace;
+      font-size: 0.65rem;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: rgba(245,240,232,0.5);
+      padding: 0 32px;
+    }
+
+    .marquee-inner span.accent {
+      color: var(--copper-light);
+    }
+
+    @keyframes marquee {
+      from { transform: translateX(0); }
+      to { transform: translateX(-50%); }
     }
 
     /* ── SECTION ── */
     .section {
-      padding: 20px 6vw 80px;
       max-width: 1400px;
       margin: 0 auto;
+      padding: 72px 6vw 80px;
     }
 
     .section-head {
-      text-align: center;
-      margin-bottom: 48px;
+      display: flex;
+      align-items: flex-end;
+      justify-content: space-between;
+      margin-bottom: 52px;
+      padding-bottom: 28px;
+      border-bottom: 1px solid var(--border);
+      flex-wrap: wrap;
+      gap: 20px;
     }
 
-    .section-tag {
-      font-size: 0.72rem;
-      font-weight: 700;
+    .section-kicker {
+      font-family: 'DM Mono', monospace;
+      font-size: 0.65rem;
       letter-spacing: 0.22em;
       text-transform: uppercase;
-      color: var(--accent);
-      margin-bottom: 12px;
+      color: var(--copper);
+      margin-bottom: 10px;
+      display: flex; align-items: center; gap: 10px;
+    }
+
+    .section-kicker::after {
+      content: '';
+      display: block;
+      flex: 1; max-width: 40px;
+      height: 1px;
+      background: var(--copper);
     }
 
     .section-title {
-      font-family: 'Orbitron', monospace;
-      font-size: clamp(1.5rem, 3vw, 2rem);
-      font-weight: 700;
-      letter-spacing: -0.01em;
+      font-family: 'Cormorant Garamond', serif;
+      font-size: clamp(1.8rem, 3vw, 2.6rem);
+      font-weight: 400;
+      line-height: 1.15;
+      color: var(--ink);
     }
 
-    /* ── GAME GRID ── */
-    .games-grid {
+    .section-title em { font-style: italic; color: var(--copper); }
+
+    .section-meta {
+      font-size: 0.72rem;
+      font-weight: 500;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: var(--warm-grey);
+      text-align: right;
+    }
+
+    /* ── FILTER TABS ── */
+    .filter-bar {
+      display: flex; gap: 4px;
+      margin-bottom: 44px;
+      flex-wrap: wrap;
+    }
+
+    .filter-btn {
+      font-size: 0.7rem;
+      font-weight: 500;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: var(--warm-grey);
+      background: transparent;
+      border: 1px solid var(--border-mid);
+      border-radius: var(--radius);
+      padding: 8px 18px;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .filter-btn:hover, .filter-btn.active {
+      background: var(--ink);
+      color: var(--cream);
+      border-color: var(--ink);
+    }
+
+    /* ── PRODUCTS GRID ── */
+    .products-grid {
       display: grid;
       grid-template-columns: repeat(3, 1fr);
-      gap: 24px;
+      gap: 1px;
+      background: var(--border);
+      border: 1px solid var(--border);
     }
 
-    /* ── GAME CARD ── */
-    .game-card {
-      position: relative;
-      background: var(--card);
-      border: 1px solid var(--border);
-      border-radius: var(--radius);
-      overflow: hidden;
+    /* ── PRODUCT CARD ── */
+    .product-card {
+      background: var(--white);
       cursor: pointer;
-      transition: all 0.4s cubic-bezier(0.23, 1, 0.32, 1);
       display: flex;
       flex-direction: column;
+      transition: background 0.3s;
+      position: relative;
+      overflow: hidden;
     }
 
-    .game-card::before {
+    .product-card:hover {
+      background: var(--cream);
+      z-index: 2;
+    }
+
+    .product-card::after {
       content: '';
-      position: absolute; inset: 0;
-      background: linear-gradient(135deg, rgba(99,102,241,0.05) 0%, transparent 60%);
+      position: absolute;
+      inset: 0;
+      border: 2px solid var(--copper);
       opacity: 0;
-      transition: opacity 0.4s;
-      z-index: 1;
+      transition: opacity 0.3s;
       pointer-events: none;
     }
 
-    .game-card:hover {
-      border-color: var(--border-glow);
-      transform: translateY(-6px);
-      box-shadow: 0 20px 40px rgba(0,0,0,0.5), 0 0 30px rgba(99,102,241,0.12);
-    }
+    .product-card:hover::after { opacity: 1; }
 
-    .game-card:hover::before { opacity: 1; }
-
-    .game-img-wrap {
+    .card-img-wrap {
       position: relative;
       width: 100%;
-      height: 200px;
+      padding-top: 75%;
       overflow: hidden;
+      background: linear-gradient(145deg, var(--cream-dark), var(--parchment));
     }
 
-    .game-img-wrap::after {
-      content: '';
-      position: absolute; inset: 0;
-      background: linear-gradient(to bottom, transparent 30%, rgba(8,8,15,0.9) 100%);
-    }
-
-    .game-img {
+    .card-img {
+      position: absolute;
+      inset: 0;
       width: 100%; height: 100%;
       object-fit: cover;
-      transition: transform 0.5s ease;
-      display: block;
+      transition: transform 0.6s cubic-bezier(0.23, 1, 0.32, 1);
     }
 
-    .game-card:hover .game-img { transform: scale(1.06); }
+    .product-card:hover .card-img { transform: scale(1.04); }
 
-    .game-platform-badge {
+    .card-condition-badge {
+      position: absolute;
+      top: 14px; left: 14px;
+      font-family: 'DM Mono', monospace;
+      font-size: 0.58rem;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+      color: var(--white);
+      background: var(--ink);
+      padding: 5px 10px;
+      border-radius: var(--radius);
+    }
+
+    .card-wishlist {
       position: absolute;
       top: 14px; right: 14px;
-      z-index: 2;
-      background: rgba(0,0,0,0.65);
+      width: 32px; height: 32px;
+      background: rgba(245,240,232,0.88);
       backdrop-filter: blur(8px);
-      border: 1px solid rgba(255,255,255,0.12);
-      color: var(--text);
-      font-size: 0.65rem;
-      font-weight: 700;
-      letter-spacing: 0.12em;
-      text-transform: uppercase;
-      padding: 5px 10px;
-      border-radius: 6px;
+      border: 1px solid var(--border);
+      border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 0.85rem;
+      cursor: pointer;
+      transition: all 0.2s;
+      opacity: 0;
     }
 
-    .game-body {
-      padding: 20px 22px 24px;
+    .product-card:hover .card-wishlist { opacity: 1; }
+    .card-wishlist:hover { background: var(--copper); }
+
+    .card-body {
+      padding: 22px 24px 26px;
+      flex: 1;
       display: flex;
       flex-direction: column;
-      flex: 1;
-      position: relative;
-      z-index: 2;
     }
 
-    .game-tag {
-      font-size: 0.64rem;
-      font-weight: 700;
-      letter-spacing: 0.18em;
+    .card-brand {
+      font-family: 'DM Mono', monospace;
+      font-size: 0.6rem;
+      letter-spacing: 0.22em;
       text-transform: uppercase;
-      color: var(--accent);
+      color: var(--copper);
       margin-bottom: 6px;
     }
 
-    .game-name {
-      font-family: 'Orbitron', monospace;
-      font-size: 1.05rem;
-      font-weight: 700;
-      line-height: 1.3;
+    .card-name {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1.25rem;
+      font-weight: 600;
+      line-height: 1.25;
+      color: var(--ink);
       margin-bottom: 10px;
     }
 
-    .game-desc {
-      font-size: 0.82rem;
-      color: var(--muted);
-      line-height: 1.6;
+    .card-desc {
+      font-size: 0.8rem;
+      font-weight: 300;
+      color: var(--warm-grey);
+      line-height: 1.65;
       margin-bottom: 20px;
       flex: 1;
+      display: -webkit-box;
+      -webkit-line-clamp: 3;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
     }
 
-    .game-meta {
+    .card-footer {
       display: flex;
       align-items: center;
       justify-content: space-between;
-      padding-top: 16px;
+      padding-top: 18px;
       border-top: 1px solid var(--border);
     }
 
-    .game-price-from {
-      font-size: 0.68rem;
-      font-weight: 600;
-      letter-spacing: 0.08em;
-      text-transform: uppercase;
-      color: var(--muted);
-    }
+    .card-price-block {}
 
-    .game-price-val {
-      font-family: 'JetBrains Mono', monospace;
-      font-size: 1rem;
+    .card-price-label {
+      font-size: 0.6rem;
       font-weight: 500;
-      color: var(--gold);
-    }
-
-    .game-btn {
-      background: linear-gradient(135deg, var(--accent), var(--accent-2));
-      border: none;
-      color: #fff;
-      font-family: 'Syne', sans-serif;
-      font-size: 0.76rem;
-      font-weight: 700;
-      letter-spacing: 0.1em;
+      letter-spacing: 0.14em;
       text-transform: uppercase;
-      padding: 10px 20px;
-      border-radius: 10px;
-      cursor: pointer;
-      transition: all 0.25s ease;
+      color: var(--warm-grey);
+      margin-bottom: 3px;
     }
 
-    .game-btn:hover {
-      opacity: 0.88;
-      transform: translateY(-1px);
-      box-shadow: 0 6px 20px rgba(99,102,241,0.4);
+    .card-price {
+      font-family: 'DM Mono', monospace;
+      font-size: 1rem;
+      font-weight: 400;
+      color: var(--ink);
+    }
+
+    .card-price-used {
+      font-size: 0.72rem;
+      color: var(--warm-grey);
+      margin-top: 2px;
+    }
+
+    .card-buy-btn {
+      font-size: 0.65rem;
+      font-weight: 500;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--ink);
+      background: transparent;
+      border: 1px solid var(--border-mid);
+      border-radius: var(--radius);
+      padding: 9px 18px;
+      cursor: pointer;
+      transition: all 0.25s;
+      display: flex; align-items: center; gap: 8px;
+    }
+
+    .card-buy-btn:hover {
+      background: var(--ink);
+      color: var(--cream);
+      border-color: var(--ink);
+    }
+
+    .card-buy-btn .arrow {
+      transition: transform 0.2s;
+    }
+    .card-buy-btn:hover .arrow { transform: translateX(4px); }
+
+    /* ── CARD ENTER ANIMATION ── */
+    .product-card {
+      animation: cardReveal 0.6s ease both;
+    }
+    .product-card:nth-child(1) { animation-delay: 0.04s; }
+    .product-card:nth-child(2) { animation-delay: 0.08s; }
+    .product-card:nth-child(3) { animation-delay: 0.12s; }
+    .product-card:nth-child(4) { animation-delay: 0.16s; }
+    .product-card:nth-child(5) { animation-delay: 0.20s; }
+    .product-card:nth-child(6) { animation-delay: 0.24s; }
+
+    @keyframes cardReveal {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    /* ── EDITORIAL STRIP ── */
+    .editorial-strip {
+      background: var(--ink);
+      display: grid;
+      grid-template-columns: 1fr 2px 1fr 2px 1fr;
+      margin: 0;
+    }
+
+    .editorial-strip-divider {
+      background: rgba(245,240,232,0.08);
+    }
+
+    .editorial-cell {
+      padding: 52px 6vw;
+      text-align: center;
+    }
+
+    .ed-icon {
+      font-size: 1.8rem;
+      margin-bottom: 16px;
+      display: block;
+    }
+
+    .ed-title {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1.2rem;
+      font-weight: 400;
+      color: var(--cream);
+      margin-bottom: 10px;
+    }
+
+    .ed-body {
+      font-size: 0.78rem;
+      font-weight: 300;
+      color: rgba(245,240,232,0.5);
+      line-height: 1.7;
     }
 
     /* ── MODAL ── */
     .modal-overlay {
       position: fixed; inset: 0; z-index: 1000;
-      background: rgba(0,0,0,0.88);
-      backdrop-filter: blur(12px);
+      background: rgba(26,23,20,0.7);
+      backdrop-filter: blur(10px);
       display: flex; align-items: center; justify-content: center;
       padding: 20px;
       opacity: 0; pointer-events: none;
@@ -397,353 +658,363 @@
     }
 
     .modal {
-      background: var(--surface);
-      border: 1px solid var(--border);
-      border-radius: 28px;
-      width: 100%; max-width: 560px;
+      background: var(--white);
+      border: 1px solid var(--border-mid);
+      border-radius: var(--radius-lg);
+      width: 100%; max-width: 580px;
       max-height: 92vh;
       overflow-y: auto;
-      transform: translateY(40px) scale(0.97);
+      transform: translateY(32px) scale(0.98);
       transition: transform 0.4s cubic-bezier(0.165, 0.84, 0.44, 1);
-      box-shadow: 0 30px 70px rgba(0,0,0,0.7), 0 0 0 1px rgba(99,102,241,0.15);
+      box-shadow: var(--shadow-lg);
     }
 
-    .modal::-webkit-scrollbar { width: 5px; }
-    .modal::-webkit-scrollbar-thumb { background: var(--border); border-radius: 10px; }
+    .modal::-webkit-scrollbar { width: 4px; }
+    .modal::-webkit-scrollbar-thumb { background: var(--parchment); }
 
     .modal-overlay.active .modal {
       transform: translateY(0) scale(1);
     }
 
-    /* Modal game banner */
-    .modal-banner {
+    /* Modal header */
+    .modal-header {
       position: relative;
-      height: 140px;
+      height: 160px;
       overflow: hidden;
-      border-radius: 28px 28px 0 0;
+      border-radius: var(--radius-lg) var(--radius-lg) 0 0;
+      background: linear-gradient(145deg, var(--parchment), var(--cream-dark));
     }
 
-    .modal-banner img {
+    .modal-header img {
       width: 100%; height: 100%;
       object-fit: cover;
+      opacity: 0.7;
     }
 
-    .modal-banner::after {
+    .modal-header::after {
       content: '';
       position: absolute; inset: 0;
-      background: linear-gradient(to bottom, rgba(0,0,0,0.1), rgba(15,15,26,0.95));
+      background: linear-gradient(to bottom, rgba(245,240,232,0.2), rgba(253,250,245,0.95));
     }
 
-    .modal-banner-info {
+    .modal-header-info {
       position: absolute;
-      bottom: 20px; left: 28px; right: 64px;
+      bottom: 22px; left: 28px; right: 60px;
       z-index: 2;
     }
 
-    .modal-game-tag {
-      font-size: 0.65rem; font-weight: 700; letter-spacing: 0.2em;
-      text-transform: uppercase; color: #a5b4fc; margin-bottom: 4px;
+    .modal-brand {
+      font-family: 'DM Mono', monospace;
+      font-size: 0.6rem;
+      letter-spacing: 0.22em;
+      text-transform: uppercase;
+      color: var(--copper);
+      margin-bottom: 5px;
     }
 
-    .modal-game-name {
-      font-family: 'Orbitron', monospace;
-      font-size: 1.4rem; font-weight: 800;
+    .modal-name {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1.6rem;
+      font-weight: 600;
+      color: var(--ink);
+      line-height: 1.2;
     }
 
     .modal-close {
       position: absolute;
       top: 14px; right: 14px; z-index: 3;
-      background: rgba(0,0,0,0.5);
+      background: rgba(245,240,232,0.88);
       backdrop-filter: blur(8px);
-      border: 1px solid rgba(255,255,255,0.12);
-      color: var(--muted);
-      width: 38px; height: 38px;
+      border: 1px solid var(--border-mid);
+      color: var(--warm-grey);
+      width: 36px; height: 36px;
       border-radius: 50%;
       cursor: pointer;
-      font-size: 1rem;
+      font-size: 0.9rem;
       display: flex; align-items: center; justify-content: center;
+      transition: all 0.2s;
+    }
+    .modal-close:hover {
+      background: var(--ink);
+      color: var(--cream);
+      border-color: var(--ink);
+    }
+
+    .modal-body { padding: 28px 32px; }
+
+    /* Condition toggle */
+    .condition-row {
+      display: flex; gap: 8px;
+      margin-bottom: 28px;
+      padding: 4px;
+      background: var(--cream-dark);
+      border-radius: var(--radius);
+    }
+
+    .cond-opt { flex: 1; position: relative; }
+    .cond-opt input[type="radio"] { position: absolute; opacity: 0; pointer-events: none; }
+
+    .cond-label {
+      display: flex; align-items: center; justify-content: center;
+      gap: 8px;
+      padding: 10px;
+      border-radius: var(--radius);
+      cursor: pointer;
       transition: all 0.25s;
+      font-size: 0.72rem;
+      font-weight: 500;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--warm-grey);
     }
 
-    .modal-close:hover { color: #fff; background: rgba(99,102,241,0.3); }
+    .cond-opt input:checked + .cond-label {
+      background: var(--white);
+      color: var(--ink);
+      box-shadow: var(--shadow-sm);
+    }
 
-    .modal-body { padding: 28px; }
+    .cond-price-tag {
+      font-family: 'DM Mono', monospace;
+      font-size: 0.7rem;
+      color: var(--copper);
+    }
 
-    /* ── CURRENCY VISUAL ── */
-    .currency-display {
-      display: flex;
-      align-items: center;
+    /* Form */
+    .form-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
       gap: 14px;
-      background: rgba(99,102,241,0.06);
-      border: 1px solid rgba(99,102,241,0.15);
-      border-radius: var(--radius-sm);
-      padding: 16px 18px;
-      margin-bottom: 24px;
     }
 
-    .currency-icon-wrap {
-      width: 52px; height: 52px;
-      border-radius: 12px;
-      overflow: hidden;
-      flex-shrink: 0;
-      border: 1px solid rgba(255,255,255,0.1);
-    }
-
-    .currency-icon-wrap img {
-      width: 100%; height: 100%;
-      object-fit: contain;
-      background: rgba(255,255,255,0.05);
-    }
-
-    .currency-icon-placeholder {
-      width: 52px; height: 52px;
-      border-radius: 12px;
-      background: linear-gradient(135deg, var(--accent), var(--accent-2));
-      display: flex; align-items: center; justify-content: center;
-      font-size: 1.6rem;
-      flex-shrink: 0;
-    }
-
-    .currency-info {}
-    .currency-label {
-      font-size: 0.68rem; font-weight: 700; letter-spacing: 0.14em;
-      text-transform: uppercase; color: var(--muted); margin-bottom: 4px;
-    }
-
-    .currency-name {
-      font-family: 'Orbitron', monospace;
-      font-size: 0.95rem; font-weight: 700;
-      background: linear-gradient(135deg, var(--accent), var(--accent-2));
-      -webkit-background-clip: text; -webkit-text-fill-color: transparent;
-      background-clip: text;
-    }
-
-    /* ── FORM ELEMENTS ── */
-    .form-group { margin-bottom: 22px; }
+    .form-group { margin-bottom: 18px; }
 
     .form-label {
       display: block;
-      font-size: 0.68rem; font-weight: 700;
-      letter-spacing: 0.14em; text-transform: uppercase;
-      color: var(--muted); margin-bottom: 10px;
+      font-size: 0.62rem;
+      font-weight: 500;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+      color: var(--warm-grey);
+      margin-bottom: 8px;
     }
 
     .form-control {
       width: 100%;
-      background: rgba(255,255,255,0.03);
-      border: 1px solid var(--border);
-      color: var(--text);
-      font-family: 'Syne', sans-serif;
-      font-size: 0.92rem;
-      padding: 13px 16px;
-      border-radius: var(--radius-sm);
+      background: var(--cream);
+      border: 1px solid var(--border-mid);
+      color: var(--ink);
+      font-family: 'DM Sans', sans-serif;
+      font-size: 0.88rem;
+      font-weight: 300;
+      padding: 12px 14px;
+      border-radius: var(--radius);
       outline: none;
-      transition: border-color 0.25s, background 0.25s;
+      transition: border-color 0.2s, background 0.2s;
       appearance: none;
     }
 
     .form-control:focus {
-      border-color: var(--accent);
-      background: rgba(99,102,241,0.04);
+      border-color: var(--copper);
+      background: var(--white);
     }
 
-    .form-control::placeholder { color: #3a3a5c; }
+    .form-control::placeholder {
+      color: rgba(122,115,106,0.5);
+    }
 
     select.form-control {
-      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%236366f1' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='7' viewBox='0 0 10 7'%3E%3Cpath d='M1 1l4 4 4-4' stroke='%23B5733A' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");
       background-repeat: no-repeat;
-      background-position: right 16px center;
-      padding-right: 40px;
+      background-position: right 14px center;
+      padding-right: 36px;
       cursor: pointer;
-      background-color: rgba(255,255,255,0.03);
+      background-color: var(--cream);
     }
 
     select.form-control option {
-      background: #0f0f1a;
-      color: var(--text);
+      background: var(--white);
+      color: var(--ink);
     }
 
-    /* ── DENOMINATION GRID ── */
-    .denom-grid {
+    /* Variant grid */
+    .variant-grid {
       display: grid;
       grid-template-columns: repeat(3, 1fr);
-      gap: 10px;
+      gap: 8px;
     }
 
-    .denom-option { position: relative; }
+    .variant-opt { position: relative; }
+    .variant-opt input[type="radio"] { position: absolute; opacity: 0; pointer-events: none; }
 
-    .denom-option input[type="radio"] {
-      position: absolute; opacity: 0; pointer-events: none;
-    }
-
-    .denom-label {
-      display: flex; flex-direction: column; align-items: center;
-      padding: 14px 10px;
-      background: rgba(255,255,255,0.02);
-      border: 1px solid var(--border);
-      border-radius: var(--radius-sm);
+    .variant-lbl {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 12px 8px;
+      background: var(--cream);
+      border: 1px solid var(--border-mid);
+      border-radius: var(--radius);
       cursor: pointer;
-      transition: all 0.25s;
+      transition: all 0.2s;
       text-align: center;
     }
 
-    .denom-option input:checked + .denom-label {
-      border-color: var(--accent);
-      background: rgba(99,102,241,0.08);
-      box-shadow: 0 0 0 1px rgba(99,102,241,0.3), 0 4px 16px rgba(99,102,241,0.15);
+    .variant-opt input:checked + .variant-lbl {
+      border-color: var(--copper);
+      background: var(--copper-pale);
     }
 
-    .denom-label:hover {
-      border-color: rgba(99,102,241,0.4);
-      background: rgba(99,102,241,0.05);
+    .variant-lbl:hover {
+      border-color: rgba(181,115,58,0.5);
     }
 
-    .denom-amount {
-      font-family: 'Orbitron', monospace;
-      font-size: 0.9rem; font-weight: 700;
-      color: var(--text);
-      margin-bottom: 4px;
+    .variant-storage {
+      font-family: 'DM Mono', monospace;
+      font-size: 0.72rem;
+      color: var(--ink);
+      margin-bottom: 3px;
     }
 
-    .denom-icon { font-size: 1.3rem; margin-bottom: 6px; }
-
-    .denom-price {
-      font-family: 'JetBrains Mono', monospace;
-      font-size: 0.75rem;
-      color: var(--gold);
+    .variant-color {
+      font-size: 0.64rem;
+      color: var(--warm-grey);
     }
 
-    /* ── PAYMENT METHOD ── */
+    /* Payment */
     .pay-grid {
       display: grid;
       grid-template-columns: repeat(2, 1fr);
-      gap: 10px;
+      gap: 8px;
     }
 
-    .pay-option { position: relative; }
+    .pay-opt { position: relative; }
+    .pay-opt input[type="radio"] { position: absolute; opacity: 0; pointer-events: none; }
 
-    .pay-option input[type="radio"] {
-      position: absolute; opacity: 0; pointer-events: none;
-    }
-
-    .pay-label {
+    .pay-lbl {
       display: flex; align-items: center; gap: 10px;
-      padding: 13px 14px;
-      background: rgba(255,255,255,0.02);
-      border: 1px solid var(--border);
-      border-radius: var(--radius-sm);
+      padding: 12px 14px;
+      background: var(--cream);
+      border: 1px solid var(--border-mid);
+      border-radius: var(--radius);
       cursor: pointer;
-      transition: all 0.25s;
+      transition: all 0.2s;
     }
 
-    .pay-option input:checked + .pay-label {
-      border-color: var(--accent);
-      background: rgba(99,102,241,0.08);
+    .pay-opt input:checked + .pay-lbl {
+      border-color: var(--copper);
+      background: var(--copper-pale);
     }
 
-    .pay-label:hover {
-      border-color: rgba(99,102,241,0.35);
-    }
+    .pay-lbl:hover { border-color: rgba(181,115,58,0.4); }
 
-    .pay-icon { font-size: 1.2rem; flex-shrink: 0; }
+    .pay-ico { font-size: 1.1rem; flex-shrink: 0; }
+    .pay-name { font-size: 0.78rem; font-weight: 500; color: var(--ink); }
+    .pay-note { font-size: 0.62rem; color: var(--warm-grey); margin-top: 1px; }
 
-    .pay-info {}
-    .pay-name {
-      font-size: 0.82rem; font-weight: 600; color: var(--text);
-    }
-    .pay-note {
-      font-size: 0.68rem; color: var(--muted); margin-top: 1px;
-    }
-
-    /* ── PRICE SUMMARY ── */
-    .price-summary {
-      background: rgba(99,102,241,0.05);
-      border: 1px solid rgba(99,102,241,0.14);
-      border-radius: var(--radius-sm);
-      padding: 18px;
-      margin-top: 4px;
-    }
-
-    .price-row {
-      display: flex; justify-content: space-between;
-      font-size: 0.88rem; color: var(--muted);
-      margin-bottom: 10px;
-    }
-
-    .price-row:last-child { margin-bottom: 0; }
-
-    .price-row.total {
-      font-size: 1rem; font-weight: 600;
-      color: var(--text);
+    /* Divider */
+    .modal-divider {
+      border: none;
       border-top: 1px solid var(--border);
-      padding-top: 14px; margin-top: 10px;
+      margin: 6px 0 20px;
     }
 
-    .price-row.total .amount {
-      font-family: 'JetBrains Mono', monospace;
-      font-size: 1.35rem; color: var(--gold);
+    /* Summary */
+    .order-summary {
+      background: var(--cream-dark);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 18px;
     }
 
-    /* ── ORDER BTN ── */
+    .sum-row {
+      display: flex;
+      justify-content: space-between;
+      font-size: 0.82rem;
+      color: var(--warm-grey);
+      margin-bottom: 8px;
+    }
+
+    .sum-row:last-child { margin-bottom: 0; }
+
+    .sum-row.total {
+      font-size: 0.9rem;
+      color: var(--ink);
+      font-weight: 500;
+      border-top: 1px solid var(--border-mid);
+      padding-top: 12px;
+      margin-top: 8px;
+    }
+
+    .sum-row.total .amount {
+      font-family: 'DM Mono', monospace;
+      font-size: 1.2rem;
+      color: var(--copper);
+    }
+
+    /* Order button */
     .btn-order {
       width: 100%;
-      background: linear-gradient(135deg, var(--accent) 0%, var(--accent-2) 100%);
+      background: var(--ink);
+      color: var(--cream);
+      font-family: 'DM Sans', sans-serif;
+      font-size: 0.72rem;
+      font-weight: 500;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      padding: 17px;
       border: none;
-      color: #fff;
-      font-family: 'Syne', sans-serif;
-      font-weight: 700; font-size: 0.95rem;
-      letter-spacing: 0.1em; text-transform: uppercase;
-      padding: 18px;
-      border-radius: var(--radius-sm);
+      border-radius: var(--radius);
       cursor: pointer;
-      margin-top: 24px;
+      margin-top: 22px;
       transition: all 0.3s;
       display: flex; align-items: center; justify-content: center; gap: 10px;
-      box-shadow: 0 4px 20px rgba(99,102,241,0.35);
     }
 
     .btn-order:hover {
-      transform: translateY(-2px);
-      box-shadow: 0 8px 28px rgba(99,102,241,0.5);
+      background: var(--copper);
+      transform: translateY(-1px);
+      box-shadow: 0 6px 20px rgba(181,115,58,0.3);
     }
 
-    .btn-order:disabled { opacity: 0.6; cursor: not-allowed; transform: none; box-shadow: none; }
+    .btn-order:disabled {
+      opacity: 0.55;
+      cursor: not-allowed;
+      transform: none;
+      box-shadow: none;
+    }
 
     /* ── TOAST ── */
     .toast {
-      position: fixed; bottom: 32px; right: 32px; z-index: 2000;
-      background: var(--surface);
-      border: 1px solid var(--border);
-      border-radius: 18px;
+      position: fixed;
+      bottom: 32px; right: 32px; z-index: 2000;
+      background: var(--ink);
+      border: 1px solid rgba(245,240,232,0.12);
+      border-radius: var(--radius-lg);
       padding: 18px 22px;
       min-width: 280px; max-width: 380px;
       display: flex; align-items: flex-start; gap: 14px;
-      transform: translateY(20px);
+      transform: translateY(16px);
       opacity: 0; pointer-events: none;
-      transition: all 0.35s cubic-bezier(0.165, 0.84, 0.44, 1);
-      box-shadow: 0 20px 50px rgba(0,0,0,0.6);
+      transition: all 0.3s cubic-bezier(0.165, 0.84, 0.44, 1);
+      box-shadow: var(--shadow-lg);
     }
 
     .toast.visible { opacity: 1; transform: translateY(0); pointer-events: all; }
-    .toast-icon { font-size: 1.3rem; flex-shrink: 0; margin-top: 1px; }
-    .toast-title { font-size: 0.9rem; font-weight: 700; margin-bottom: 3px; }
-    .toast-msg { font-size: 0.8rem; color: var(--muted); line-height: 1.5; }
-    .toast.success { border-color: rgba(16,185,129,0.3); }
-    .toast.success .toast-icon { color: var(--success); }
-    .toast.error { border-color: rgba(239,68,68,0.25); }
-    .toast.error .toast-icon { color: var(--danger); }
-
-    /* ── DIVIDER ── */
-    .modal-divider {
-      border: none; border-top: 1px solid var(--border);
-      margin: 6px 0 22px;
+    .toast-icon { font-size: 1.1rem; flex-shrink: 0; margin-top: 2px; }
+    .toast-title {
+      font-size: 0.82rem; font-weight: 500;
+      color: var(--cream); margin-bottom: 3px;
     }
+    .toast-msg { font-size: 0.75rem; color: rgba(245,240,232,0.6); line-height: 1.5; }
+    .toast.success { border-left: 3px solid var(--copper); }
+    .toast.error { border-left: 3px solid #C0392B; }
 
     /* ── SPINNER ── */
     .spinner {
-      width: 18px; height: 18px;
-      border: 2px solid rgba(255,255,255,0.25);
-      border-top-color: #fff;
+      width: 16px; height: 16px;
+      border: 2px solid rgba(245,240,232,0.25);
+      border-top-color: var(--cream);
       border-radius: 50%;
       animation: spin 0.7s linear infinite;
     }
@@ -752,132 +1023,225 @@
 
     /* ── FOOTER ── */
     footer {
-      border-top: 1px solid var(--border);
-      padding: 32px 6vw;
-      display: flex; align-items: center; justify-content: space-between;
-      color: var(--muted); font-size: 0.82rem;
-      background: rgba(0,0,0,0.3);
+      background: var(--ink-light);
+      border-top: 1px solid rgba(245,240,232,0.08);
+      padding: 48px 6vw 36px;
     }
 
-    footer a { color: var(--accent); text-decoration: none; transition: color 0.2s; }
-    footer a:hover { color: var(--text); }
+    .footer-top {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      margin-bottom: 36px;
+      flex-wrap: wrap; gap: 32px;
+    }
+
+    .footer-logo {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1.5rem; font-weight: 700;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--cream);
+      text-decoration: none;
+    }
+    .footer-logo span { color: var(--copper-light); }
+
+    .footer-tagline {
+      font-size: 0.75rem;
+      font-weight: 300;
+      color: rgba(245,240,232,0.4);
+      margin-top: 8px;
+      max-width: 240px;
+      line-height: 1.6;
+    }
+
+    .footer-links {
+      display: flex; gap: 28px; flex-wrap: wrap; align-items: center;
+    }
+
+    .footer-links a {
+      font-size: 0.68rem;
+      font-weight: 500;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: rgba(245,240,232,0.4);
+      text-decoration: none;
+      transition: color 0.2s;
+    }
+    .footer-links a:hover { color: var(--copper-light); }
+
+    .footer-bottom {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding-top: 28px;
+      border-top: 1px solid rgba(245,240,232,0.08);
+      font-size: 0.68rem;
+      color: rgba(245,240,232,0.25);
+      flex-wrap: wrap; gap: 10px;
+    }
 
     /* ── RESPONSIVE ── */
-    @media (max-width: 900px) {
-      .games-grid { grid-template-columns: repeat(2, 1fr); gap: 16px; }
+    @media (max-width: 1024px) {
+      .products-grid { grid-template-columns: repeat(2, 1fr); }
+      .hero { grid-template-columns: 1fr; text-align: center; padding: 60px 6vw; }
+      .hero-sub { margin: 0 auto 40px; }
+      .hero-cta-row { justify-content: center; }
+      .hero-visual { display: none; }
+      .hero-stats-strip { display: grid; grid-template-columns: repeat(3, 1fr); }
     }
 
-    @media (max-width: 600px) {
-      nav { padding: 0 4vw; height: 64px; }
-      .nav-links { display: none; }
-      .nav-badge { font-size: 0.68rem; padding: 6px 12px; }
-
-      .hero { padding: 60px 4vw 50px; }
-      .hero h1 { font-size: 1.85rem; }
-      .hero-stats { gap: 28px; }
-
-      .section { padding: 10px 4vw 60px; }
-      .games-grid { grid-template-columns: repeat(2, 1fr); gap: 12px; }
-
-      .game-img-wrap { height: 140px; }
-      .game-body { padding: 14px 14px 18px; }
-      .game-name { font-size: 0.9rem; }
-      .game-desc { display: none; }
-      .game-meta { flex-direction: column; align-items: flex-start; gap: 10px; }
-      .game-btn { width: 100%; text-align: center; }
-
+    @media (max-width: 768px) {
+      nav { padding: 0 4vw; }
+      .nav-center { display: none; }
+      .hero { padding: 50px 4vw; }
+      .section { padding: 52px 4vw 60px; }
+     .products-grid { grid-template-columns: repeat(2, 1fr); gap: 12px; }
+      .hero-stats-strip .hero-stat { padding: 20px 4vw; }
+      .editorial-strip { grid-template-columns: 1fr; }
+      .editorial-strip-divider { display: none; }
+      #products-grid { padding: 12px; }
       .modal-overlay { align-items: flex-end; padding: 0; }
-      .modal { border-radius: 24px 24px 0 0; max-height: 95vh; transform: translateY(100%); }
+      .modal { border-radius: var(--radius-lg) var(--radius-lg) 0 0; max-height: 96vh; transform: translateY(100%); }
       .modal-overlay.active .modal { transform: translateY(0); }
-      .modal-body { padding: 20px; }
-
-      .denom-grid { grid-template-columns: repeat(2, 1fr); }
+      .modal-body { padding: 20px 20px; }
+      .form-row { grid-template-columns: 1fr; }
       .pay-grid { grid-template-columns: 1fr; }
-
-      footer { flex-direction: column; gap: 12px; text-align: center; }
+      .variant-grid { grid-template-columns: repeat(2, 1fr); }
+      footer { padding: 36px 4vw; }
+      .footer-top { flex-direction: column; }
       .toast { right: 16px; left: 16px; bottom: 16px; min-width: auto; max-width: none; }
     }
 
-    /* ── CARD ENTER ANIMATION ── */
-    .game-card {
-      animation: cardIn 0.5s ease both;
+    @media (max-width: 480px) {
+      .hero h1 { font-size: 2.4rem; }
+      .hero-stats-strip { grid-template-columns: 1fr; }
+      .hero-stats-strip .hero-stat { border-right: none; border-bottom: 1px solid var(--border); }
+      .hero-stats-strip .hero-stat:last-child { border-bottom: none; }
     }
-
-    .game-card:nth-child(1) { animation-delay: 0.05s; }
-    .game-card:nth-child(2) { animation-delay: 0.1s; }
-    .game-card:nth-child(3) { animation-delay: 0.15s; }
-    .game-card:nth-child(4) { animation-delay: 0.2s; }
-    .game-card:nth-child(5) { animation-delay: 0.25s; }
-    .game-card:nth-child(6) { animation-delay: 0.3s; }
-
-    @keyframes cardIn {
-      from { opacity: 0; transform: translateY(24px); }
-      to { opacity: 1; transform: translateY(0); }
-    }
+    @media (max-width: 360px) {
+.products-grid { grid-template-columns: 1fr; }
+}
   </style>
 </head>
 <body>
 
 <!-- NAV -->
 <nav>
-  <a class="nav-logo" href="/">GAMETOP</a>
+  <a class="nav-logo" href="/">PIS<span>O</span>N</a>
+  <div class="nav-center">
+    <a href="/">Collection</a>
+    <a href="/orders">Orders</a>
+    <a href="#">About</a>
+  </div>
   <div class="nav-right">
-    <ul class="nav-links">
-      <li><a href="/">Games</a></li>
-      <li><a href="/orders">My Orders</a></li>
-    </ul>
-    <a class="nav-badge" href="/orders">Order History</a>
+    <a class="nav-orders" href="/orders">Order History</a>
   </div>
 </nav>
 
 <!-- HERO -->
 <section class="hero">
-  <div class="hero-glow"></div>
-  <div class="hero-eyebrow">Instant Top-Up · No Login Required</div>
-  <h1>Top Up Your<br><span class="grad">Favorite Games</span></h1>
-  <p>Fast, secure, and instant top-up for the biggest mobile and PC games. GCash, credit card, and more accepted.</p>
-  <div class="hero-stats">
-    <div class="hero-stat">
-      <div class="hero-stat-val">6</div>
-      <div class="hero-stat-lbl">Games</div>
+  <div class="hero-text">
+    <div class="hero-badge">New Arrivals 2025</div>
+    <h1>Carry <em>extraordinary</em><br>in your pocket</h1>
+    <p class="hero-sub">A curated selection of the world's finest smartphones. Brand new and certified pre-owned — delivered to your door.</p>
+    <div class="hero-cta-row">
+      <a href="#products" class="btn-primary">Shop Collection</a>
+      <a href="/orders" class="hero-link">View Orders</a>
     </div>
-    <div class="hero-stat">
-      <div class="hero-stat-val">₱39</div>
-      <div class="hero-stat-lbl">Starting At</div>
-    </div>
-    <div class="hero-stat">
-      <div class="hero-stat-val">Instant</div>
-      <div class="hero-stat-lbl">Delivery</div>
+  </div>
+  <div class="hero-visual">
+    <div class="hero-phone-stage">
+      <div class="hero-phone-bg"></div>
+      <div class="hero-phone-accent"></div>
     </div>
   </div>
 </section>
 
-<!-- GAMES GRID -->
+<!-- STATS STRIP -->
+<div class="hero-stats-strip">
+  <div class="hero-stat">
+    <div class="hero-stat-num">6+</div>
+    <div class="hero-stat-txt">Premium<br>Brands</div>
+  </div>
+  <div class="hero-stat">
+    <div class="hero-stat-num">2yr</div>
+    <div class="hero-stat-txt">Warranty<br>Support</div>
+  </div>
+  <div class="hero-stat">
+    <div class="hero-stat-num">1–3</div>
+    <div class="hero-stat-txt">Day<br>Delivery</div>
+  </div>
+</div>
+
+<!-- MARQUEE -->
+<div class="marquee-track" aria-hidden="true">
+  <div class="marquee-inner">
+    <span class="accent">— Apple</span><span>iPhone 16 Pro Max</span>
+    <span class="accent">— Samsung</span><span>Galaxy S25 Ultra</span>
+    <span class="accent">— Google</span><span>Pixel 9 Pro</span>
+    <span class="accent">— OnePlus</span><span>13 Series</span>
+    <span class="accent">— Xiaomi</span><span>15 Ultra</span>
+    <span class="accent">— OPPO</span><span>Find X8 Pro</span>
+    <span class="accent">— Free Shipping</span><span>On All Orders</span>
+    <span class="accent">— Apple</span><span>iPhone 16 Pro Max</span>
+    <span class="accent">— Samsung</span><span>Galaxy S25 Ultra</span>
+    <span class="accent">— Google</span><span>Pixel 9 Pro</span>
+    <span class="accent">— OnePlus</span><span>13 Series</span>
+    <span class="accent">— Xiaomi</span><span>15 Ultra</span>
+    <span class="accent">— OPPO</span><span>Find X8 Pro</span>
+    <span class="accent">— Free Shipping</span><span>On All Orders</span>
+  </div>
+</div>
+
+<!-- PRODUCTS -->
 <section id="products">
   <div class="section">
     <div class="section-head">
-      <div class="section-tag">Select a Game</div>
-      <h2 class="section-title">Choose Your Game</h2>
+      <div>
+        <div class="section-kicker">Current Collection</div>
+        <h2 class="section-title">Flagship <em>Smartphones</em></h2>
+      </div>
+      <div class="section-meta">{{ products | length }} models available</div>
     </div>
-    <div class="games-grid">
+
+    <!-- Filter Bar -->
+    <div class="filter-bar">
+      <button class="filter-btn active" onclick="filterProducts('all', this)">All</button>
+      <button class="filter-btn" onclick="filterProducts('Apple', this)">Apple</button>
+      <button class="filter-btn" onclick="filterProducts('Samsung', this)">Samsung</button>
+      <button class="filter-btn" onclick="filterProducts('Google', this)">Google</button>
+      <button class="filter-btn" onclick="filterProducts('OnePlus', this)">OnePlus</button>
+      <button class="filter-btn" onclick="filterProducts('Xiaomi', this)">Xiaomi</button>
+      <button class="filter-btn" onclick="filterProducts('OPPO', this)">OPPO</button>
+    </div>
+
+    <div class="products-grid" id="products-grid">
       {% for product in products %}
-      <div class="game-card" onclick='openModal({{ product | tojson | safe }})'>
-        <div class="game-img-wrap">
-          <img class="game-img"
+      <div class="product-card" data-brand="{{ product.brand }}" onclick='openModal({{ product | tojson | safe }})'>
+        <div class="card-img-wrap">
+          <img class="card-img"
                src="{{ url_for('static', filename='images/' + loop.cycle('1.jpg','2.jpg','3.jpg','4.jpg','5.jpg','6.jpg')) }}"
-               alt="{{ product.name }}">
-          <span class="game-platform-badge">{{ product.brand }}</span>
+               alt="{{ product.name }}"
+               onerror="this.style.opacity='0'">
+          <span class="card-condition-badge">Brand New</span>
+          <button class="card-wishlist" onclick="event.stopPropagation()" title="Save">♡</button>
         </div>
-        <div class="game-body">
-          <div class="game-tag">Top-Up Available</div>
-          <div class="game-name">{{ product.name }}</div>
-          <div class="game-desc">{{ product.description }}</div>
-          <div class="game-meta">
-            <div>
-              <div class="game-price-from">Starting at</div>
-              <div class="game-price-val">₱{{ "%.0f"|format(product.original_price) }}</div>
+        <div class="card-body">
+          <div class="card-brand">{{ product.brand }}</div>
+          <div class="card-name">{{ product.name }}</div>
+          <div class="card-desc">{{ product.description }}</div>
+          <div class="card-footer">
+            <div class="card-price-block">
+              <div class="card-price-label">Starting from</div>
+              <div class="card-price">₱{{ "{:,.0f}".format(product.original_price) }}</div>
+              {% if product.secondhand_price and product.secondhand_price > 0 %}
+              <div class="card-price-used">Pre-owned: ₱{{ "{:,.0f}".format(product.secondhand_price) }}</div>
+              {% endif %}
             </div>
-            <button type="button" class="game-btn">Top Up →</button>
+            <button type="button" class="card-buy-btn">
+              Order <span class="arrow">→</span>
+            </button>
           </div>
         </div>
       </div>
@@ -886,106 +1250,145 @@
   </div>
 </section>
 
+<!-- EDITORIAL STRIP -->
+<div class="editorial-strip">
+  <div class="editorial-cell">
+    <span class="ed-icon">🚚</span>
+    <div class="ed-title">Free Nationwide Delivery</div>
+    <div class="ed-body">All orders ship free within the Philippines, 1–3 business days with live tracking.</div>
+  </div>
+  <div class="editorial-strip-divider"></div>
+  <div class="editorial-cell">
+    <span class="ed-icon">🛡️</span>
+    <div class="ed-title">Authenticity Guaranteed</div>
+    <div class="ed-body">Every unit is sourced from authorized distributors and individually verified before dispatch.</div>
+  </div>
+  <div class="editorial-strip-divider"></div>
+  <div class="editorial-cell">
+    <span class="ed-icon">↩️</span>
+    <div class="ed-title">14-Day Returns</div>
+    <div class="ed-body">Changed your mind? Return any unit within 14 days for a full refund — no questions asked.</div>
+  </div>
+</div>
+
 <!-- FOOTER -->
 <footer>
-  <span>© 2025 GameTop. School Project.</span>
-  <a href="/orders">View Order History →</a>
+  <div class="footer-top">
+    <div>
+      <a class="footer-logo" href="/">PIS<span>O</span>N</a>
+      <div class="footer-tagline">Premium smartphones, delivered with care. Cebu City, Philippines.</div>
+    </div>
+    <div class="footer-links">
+      <a href="/">Shop</a>
+      <a href="/orders">Orders</a>
+      <a href="#">Privacy</a>
+      <a href="#">Terms</a>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <span>© 2025 Pison Phone Store. School Project.</span>
+    <span>Powered by Flask + Supabase</span>
+  </div>
 </footer>
 
 <!-- ORDER MODAL -->
 <div class="modal-overlay" id="orderModal">
   <div class="modal">
 
-    <!-- Banner -->
-    <div class="modal-banner" id="modal-banner">
-      <img id="modal-banner-img" src="" alt="">
-      <div class="modal-banner-info">
-        <div class="modal-game-tag" id="modal-game-tag">Top-Up</div>
-        <div class="modal-game-name" id="modal-name"></div>
+    <div class="modal-header" id="modal-header">
+      <img id="modal-header-img" src="" alt="">
+      <div class="modal-header-info">
+        <div class="modal-brand" id="modal-brand"></div>
+        <div class="modal-name" id="modal-name"></div>
       </div>
       <button class="modal-close" onclick="closeModal()">✕</button>
     </div>
 
     <div class="modal-body">
       <input type="hidden" id="modal-product-id" />
+      <input type="hidden" id="modal-base-price" />
 
-      <!-- Currency display -->
-      <div class="currency-display" id="currency-display">
-        <div id="currency-icon-wrap"></div>
-        <div class="currency-info">
-          <div class="currency-label">In-Game Currency</div>
-          <div class="currency-name" id="currency-name">Diamonds</div>
+      <!-- Condition Toggle -->
+      <div class="form-group">
+        <label class="form-label">Condition</label>
+        <div class="condition-row">
+          <div class="cond-opt">
+            <input type="radio" name="condition" id="cond-new" value="brand_new" checked onchange="updateCondition()">
+            <label class="cond-lbl" for="cond-new">
+              Brand New &nbsp;<span class="cond-price-tag" id="cond-new-price"></span>
+            </label>
+          </div>
+          <div class="cond-opt" id="cond-used-wrap">
+            <input type="radio" name="condition" id="cond-used" value="second_hand" onchange="updateCondition()">
+            <label class="cond-lbl" for="cond-used">
+              Pre-Owned &nbsp;<span class="cond-price-tag" id="cond-used-price"></span>
+            </label>
+          </div>
         </div>
       </div>
 
-      <!-- Game UID -->
+      <!-- Variant Selector -->
       <div class="form-group">
-        <label class="form-label" for="game-uid">Game User ID / Username</label>
-        <input type="text" class="form-control" id="game-uid" placeholder="Enter your in-game ID or username" />
-      </div>
-
-      <!-- Server (for ML, etc.) -->
-      <div class="form-group" id="server-group" style="display:none">
-        <label class="form-label" for="game-server">Server / Zone</label>
-        <select class="form-control" id="game-server">
-          <option value="">Select Server</option>
-        </select>
-      </div>
-
-      <hr class="modal-divider">
-
-      <!-- Denomination -->
-      <div class="form-group">
-        <label class="form-label">Select Amount</label>
-        <div class="denom-grid" id="denom-grid">
+        <label class="form-label">Storage & Color</label>
+        <div class="variant-grid" id="variant-grid">
           <!-- filled by JS -->
         </div>
       </div>
 
       <hr class="modal-divider">
 
-      <!-- Payment Method -->
+      <!-- Customer Info -->
+      <div class="form-row">
+        <div class="form-group">
+          <label class="form-label" for="customer-name">Full Name</label>
+          <input type="text" class="form-control" id="customer-name" placeholder="Juan dela Cruz" />
+        </div>
+        <div class="form-group">
+          <label class="form-label" for="customer-phone">Phone Number</label>
+          <input type="tel" class="form-control" id="customer-phone" placeholder="09XX XXX XXXX" />
+        </div>
+      </div>
+      <div class="form-group">
+        <label class="form-label" for="customer-email">Email Address</label>
+        <input type="email" class="form-control" id="customer-email" placeholder="juan@example.com" />
+      </div>
+      <div class="form-group">
+        <label class="form-label" for="delivery-address">Delivery Address</label>
+        <input type="text" class="form-control" id="delivery-address" placeholder="Street, Barangay, City, Province" />
+      </div>
+
+      <hr class="modal-divider">
+
+      <!-- Payment -->
       <div class="form-group">
         <label class="form-label">Payment Method</label>
         <div class="pay-grid">
-          <div class="pay-option">
+          <div class="pay-opt">
             <input type="radio" name="paymethod" id="pay-gcash" value="gcash" checked>
-            <label class="pay-label" for="pay-gcash">
-              <span class="pay-icon">💙</span>
-              <div class="pay-info">
-                <div class="pay-name">GCash</div>
-                <div class="pay-note">Instant transfer</div>
-              </div>
+            <label class="pay-lbl" for="pay-gcash">
+              <span class="pay-ico">💙</span>
+              <div><div class="pay-name">GCash</div><div class="pay-note">Instant</div></div>
             </label>
           </div>
-          <div class="pay-option">
+          <div class="pay-opt">
             <input type="radio" name="paymethod" id="pay-card" value="credit_card">
-            <label class="pay-label" for="pay-card">
-              <span class="pay-icon">💳</span>
-              <div class="pay-info">
-                <div class="pay-name">Credit / Debit Card</div>
-                <div class="pay-note">Visa, Mastercard</div>
-              </div>
+            <label class="pay-lbl" for="pay-card">
+              <span class="pay-ico">💳</span>
+              <div><div class="pay-name">Credit / Debit</div><div class="pay-note">Visa, Mastercard</div></div>
             </label>
           </div>
-          <div class="pay-option">
+          <div class="pay-opt">
             <input type="radio" name="paymethod" id="pay-maya" value="bank_transfer">
-            <label class="pay-label" for="pay-maya">
-              <span class="pay-icon">🟢</span>
-              <div class="pay-info">
-                <div class="pay-name">Maya</div>
-                <div class="pay-note">PayMaya wallet</div>
-              </div>
+            <label class="pay-lbl" for="pay-maya">
+              <span class="pay-ico">🟢</span>
+              <div><div class="pay-name">Maya</div><div class="pay-note">PayMaya wallet</div></div>
             </label>
           </div>
-          <div class="pay-option">
+          <div class="pay-opt">
             <input type="radio" name="paymethod" id="pay-cash" value="cash">
-            <label class="pay-label" for="pay-cash">
-              <span class="pay-icon">💵</span>
-              <div class="pay-info">
-                <div class="pay-name">Cash</div>
-                <div class="pay-note">Pay on delivery</div>
-              </div>
+            <label class="pay-lbl" for="pay-cash">
+              <span class="pay-ico">💵</span>
+              <div><div class="pay-name">Cash on Delivery</div><div class="pay-note">Pay on arrival</div></div>
             </label>
           </div>
         </div>
@@ -993,29 +1396,14 @@
 
       <hr class="modal-divider">
 
-      <!-- Customer Info -->
-      <div class="form-group">
-        <label class="form-label" for="customer-name">Your Name</label>
-        <input type="text" class="form-control" id="customer-name" placeholder="Juan dela Cruz" />
-      </div>
-      <div class="form-group">
-        <label class="form-label" for="customer-email">Email Address</label>
-        <input type="email" class="form-control" id="customer-email" placeholder="juan@example.com" />
-      </div>
-
-      <!-- Price Summary -->
+      <!-- Summary -->
       <div class="form-group">
         <label class="form-label">Order Summary</label>
-        <div class="price-summary">
-          <div class="price-row">
-            <span>Item</span>
-            <span id="sum-item">—</span>
-          </div>
-          <div class="price-row">
-            <span>Game</span>
-            <span id="sum-game">—</span>
-          </div>
-          <div class="price-row total">
+        <div class="order-summary">
+          <div class="sum-row"><span>Device</span><span id="sum-device">—</span></div>
+          <div class="sum-row"><span>Variant</span><span id="sum-variant">—</span></div>
+          <div class="sum-row"><span>Condition</span><span id="sum-condition">Brand New</span></div>
+          <div class="sum-row total">
             <span>Total</span>
             <span class="amount" id="sum-total">₱0.00</span>
           </div>
@@ -1023,8 +1411,9 @@
       </div>
 
       <button class="btn-order" id="order-btn" onclick="submitOrder()">
-        ⚡ Top Up Now
+        Place Order
       </button>
+
     </div>
   </div>
 </div>
@@ -1039,203 +1428,166 @@
 </div>
 
 <script>
-  /* ── GAME DATA CONFIG ── */
-  const GAME_CONFIG = {
-    "Call of Duty Mobile": {
-      currency: "CP (COD Points)",
-      currencyIcon: "🎖️",
-      currencyImg: null,
-      tag: "Mobile Shooter",
-      servers: [],
-      denoms: [
-        { amount: "80 CP",    price: 39  },
-        { amount: "400 CP",   price: 179 },
-        { amount: "800 CP",   price: 349 },
-        { amount: "2000 CP",  price: 849 },
-        { amount: "4000 CP",  price: 1649 },
-        { amount: "8000 CP",  price: 3199 },
-      ],
+  /* ── PHONE VARIANTS CONFIG ── */
+  const PHONE_CONFIG = {
+    "Apple": {
+      variants: [
+        { storage: "256GB", color: "Black Titan.", price_add: 0 },
+        { storage: "512GB", color: "White Titan.", price_add: 10000 },
+        { storage: "1TB",   color: "Desert Titan.", price_add: 22000 },
+      ]
     },
-    "Valorant": {
-      currency: "Valorant Points",
-      currencyIcon: "🔺",
-      currencyImg: null,
-      tag: "PC Tactical Shooter",
-      servers: [],
-      denoms: [
-        { amount: "475 VP",   price: 99  },
-        { amount: "1000 VP",  price: 199 },
-        { amount: "2050 VP",  price: 399 },
-        { amount: "3650 VP",  price: 699 },
-        { amount: "5350 VP",  price: 999 },
-        { amount: "11000 VP", price: 1999 },
-      ],
+    "Samsung": {
+      variants: [
+        { storage: "256GB", color: "Titanium Black", price_add: 0 },
+        { storage: "512GB", color: "Titanium Gray",  price_add: 8000 },
+        { storage: "1TB",   color: "Titanium Silver", price_add: 18000 },
+      ]
     },
-    "Dota 2": {
-      currency: "Dota Coins",
-      currencyIcon: "🐉",
-      currencyImg: null,
-      tag: "PC Strategy",
-      servers: [],
-      denoms: [
-        { amount: "110 Coins",  price: 55  },
-        { amount: "220 Coins",  price: 110 },
-        { amount: "560 Coins",  price: 275 },
-        { amount: "1200 Coins", price: 549 },
-        { amount: "2600 Coins", price: 1099 },
-        { amount: "5000 Coins", price: 1999 },
-      ],
+    "Google": {
+      variants: [
+        { storage: "128GB", color: "Obsidian", price_add: 0 },
+        { storage: "256GB", color: "Porcelain", price_add: 5000 },
+        { storage: "512GB", color: "Hazel",     price_add: 12000 },
+      ]
     },
-    "Mobile Legends": {
-      currency: "Diamonds",
-      currencyIcon: "💎",
-      currencyImg: null,
-      tag: "Mobile MOBA",
-      servers: ["Server 1 (PH)", "Server 2 (SEA)", "Server 3 (NA)", "Server 4 (EU)"],
-      denoms: [
-        { amount: "11 💎",   price: 20  },
-        { amount: "22 💎",   price: 40  },
-        { amount: "56 💎",   price: 100 },
-        { amount: "112 💎",  price: 199 },
-        { amount: "336 💎",  price: 599 },
-        { amount: "570 💎",  price: 999 },
-      ],
+    "OnePlus": {
+      variants: [
+        { storage: "256GB", color: "Silky Black", price_add: 0 },
+        { storage: "512GB", color: "Arctic Dawn", price_add: 5000 },
+        { storage: "1TB",   color: "Flowy Emerald", price_add: 12000 },
+      ]
     },
-    "Clash of Clans": {
-      currency: "Gems",
-      currencyIcon: "💚",
-      currencyImg: null,
-      tag: "Mobile Strategy",
-      servers: [],
-      denoms: [
-        { amount: "80 Gems",    price: 39  },
-        { amount: "500 Gems",   price: 229 },
-        { amount: "1200 Gems",  price: 549 },
-        { amount: "2500 Gems",  price: 1099 },
-        { amount: "6500 Gems",  price: 2799 },
-        { amount: "14000 Gems", price: 5799 },
-      ],
+    "Xiaomi": {
+      variants: [
+        { storage: "256GB", color: "Titanium Black", price_add: 0 },
+        { storage: "512GB", color: "Titanium White",  price_add: 7000 },
+        { storage: "1TB",   color: "Titanium Gray",   price_add: 15000 },
+      ]
     },
-    "PUBG Mobile": {
-      currency: "UC (Unknown Cash)",
-      currencyIcon: "🟡",
-      currencyImg: null,
-      tag: "Mobile Battle Royale",
-      servers: ["Asia", "North America", "Europe", "South America"],
-      denoms: [
-        { amount: "60 UC",    price: 39  },
-        { amount: "325 UC",   price: 199 },
-        { amount: "660 UC",   price: 399 },
-        { amount: "1800 UC",  price: 1099 },
-        { amount: "3850 UC",  price: 2199 },
-        { amount: "8100 UC",  price: 4399 },
-      ],
+    "OPPO": {
+      variants: [
+        { storage: "256GB", color: "Space Black",  price_add: 0 },
+        { storage: "512GB", color: "Moonlight White", price_add: 6000 },
+        { storage: "1TB",   color: "Emerald Green",   price_add: 13000 },
+      ]
     },
   };
 
-  let currentProduct = null;
-  let selectedDenomPrice = 0;
-  let selectedDenomLabel = "";
+  const DEFAULT_VARIANTS = [
+    { storage: "128GB", color: "Black", price_add: 0 },
+    { storage: "256GB", color: "White", price_add: 5000 },
+    { storage: "512GB", color: "Blue",  price_add: 12000 },
+  ];
+
+  let currentProduct   = null;
+  let selectedVariant  = null;
+  let currentCondition = "brand_new";
+
+  /* ── FILTER ── */
+  function filterProducts(brand, btn) {
+    document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    document.querySelectorAll('.product-card').forEach(card => {
+      const match = brand === 'all' || card.dataset.brand === brand;
+      card.style.display = match ? '' : 'none';
+    });
+  }
 
   /* ── OPEN MODAL ── */
   function openModal(product) {
     currentProduct = product;
-    const cfg = getConfig(product.name);
+    currentCondition = "brand_new";
 
-    // Banner
-    const bannerImg = document.getElementById('modal-banner-img');
-    const imgIndex = getProductIndex(product.id);
-    bannerImg.src = `/static/images/${imgIndex}.jpg`;
-    bannerImg.onerror = () => { document.getElementById('modal-banner').style.background = 'linear-gradient(135deg,#1a1a2e,#0f0f1a)'; };
+    // Header image
+    const cards = document.querySelectorAll('.product-card');
+    let imgIdx = 1;
+    cards.forEach((card, i) => {
+      if ((card.getAttribute('onclick') || '').includes(product.id)) imgIdx = (i % 6) + 1;
+    });
+    const hdrImg = document.getElementById('modal-header-img');
+    hdrImg.src = `/static/images/${imgIdx}.jpg`;
 
-    document.getElementById('modal-name').textContent = product.name;
-    document.getElementById('modal-game-tag').textContent = cfg.tag;
-    document.getElementById('currency-name').textContent = cfg.currency;
+    document.getElementById('modal-brand').textContent = product.brand;
+    document.getElementById('modal-name').textContent  = product.name;
+    document.getElementById('modal-product-id').value  = product.id;
+    document.getElementById('modal-base-price').value  = product.original_price;
 
-    // Currency icon
-    const wrap = document.getElementById('currency-icon-wrap');
-    wrap.innerHTML = `<div class="currency-icon-placeholder">${cfg.currencyIcon}</div>`;
-
-    // Server
-    const sg = document.getElementById('server-group');
-    const sel = document.getElementById('game-server');
-    if (cfg.servers && cfg.servers.length > 0) {
-      sg.style.display = '';
-      sel.innerHTML = '<option value="">Select Server</option>' +
-        cfg.servers.map(s => `<option value="${s}">${s}</option>`).join('');
+    // Condition prices
+    document.getElementById('cond-new-price').textContent  = '₱' + fmtNum(product.original_price);
+    const usedEl = document.getElementById('cond-used-price');
+    const usedWrap = document.getElementById('cond-used-wrap');
+    if (product.secondhand_price && product.secondhand_price > 0) {
+      usedEl.textContent = '₱' + fmtNum(product.secondhand_price);
+      usedWrap.style.display = '';
     } else {
-      sg.style.display = 'none';
+      usedWrap.style.display = 'none';
     }
 
-    // Denominations
-    buildDenoms(cfg.denoms);
+    // Reset condition
+    document.getElementById('cond-new').checked = true;
 
-    // Reset fields
-    document.getElementById('game-uid').value = '';
-    document.getElementById('customer-name').value = '';
-    document.getElementById('customer-email').value = '';
+    // Build variants
+    const cfg = PHONE_CONFIG[product.brand] || { variants: DEFAULT_VARIANTS };
+    buildVariants(cfg.variants, product.original_price);
+
+    // Clear inputs
+    ['customer-name','customer-phone','customer-email','delivery-address'].forEach(id => {
+      document.getElementById(id).value = '';
+    });
     document.getElementById('pay-gcash').checked = true;
-    document.getElementById('modal-product-id').value = product.id;
 
     document.getElementById('orderModal').classList.add('active');
     document.body.style.overflow = 'hidden';
   }
 
-  function getConfig(name) {
-    for (const key in GAME_CONFIG) {
-      if (name.toLowerCase().includes(key.toLowerCase()) || key.toLowerCase().includes(name.toLowerCase())) {
-        return GAME_CONFIG[key];
-      }
-    }
-    // Fuzzy fallback
-    const lc = name.toLowerCase();
-    if (lc.includes('legend') || lc.includes('mobile legend')) return GAME_CONFIG["Mobile Legends"];
-    if (lc.includes('clash')) return GAME_CONFIG["Clash of Clans"];
-    if (lc.includes('pubg') || lc.includes('playerunknown')) return GAME_CONFIG["PUBG Mobile"];
-    if (lc.includes('valorant')) return GAME_CONFIG["Valorant"];
-    if (lc.includes('dota')) return GAME_CONFIG["Dota 2"];
-    if (lc.includes('cod') || lc.includes('call of duty')) return GAME_CONFIG["Call of Duty Mobile"];
-    // default
-    return {
-      currency: "Game Credits",
-      currencyIcon: "🎮",
-      tag: "Top-Up",
-      servers: [],
-      denoms: [
-        { amount: "Small Pack",  price: 99  },
-        { amount: "Medium Pack", price: 299 },
-        { amount: "Large Pack",  price: 599 },
-      ],
-    };
-  }
-
-  function buildDenoms(denoms) {
-    const grid = document.getElementById('denom-grid');
-    grid.innerHTML = denoms.map((d, i) => `
-      <div class="denom-option">
-        <input type="radio" name="denom" id="denom-${i}" value="${d.price}" data-label="${d.amount}" ${i===0?'checked':''} onchange="selectDenom(${d.price},'${d.amount}')">
-        <label class="denom-label" for="denom-${i}">
-          <div class="denom-amount">${d.amount}</div>
-          <div class="denom-price">₱${d.price}</div>
+  function buildVariants(variants, basePrice) {
+    const grid = document.getElementById('variant-grid');
+    grid.innerHTML = variants.map((v, i) => `
+      <div class="variant-opt">
+        <input type="radio" name="variant" id="var-${i}" value="${i}"
+          ${i===0 ? 'checked' : ''}
+          onchange="selectVariant(${v.price_add}, '${v.storage} · ${v.color}')">
+        <label class="variant-lbl" for="var-${i}">
+          <div class="variant-storage">${v.storage}</div>
+          <div class="variant-color">${v.color}</div>
         </label>
       </div>
     `).join('');
 
-    // auto-select first
-    if (denoms.length > 0) selectDenom(denoms[0].price, denoms[0].amount);
+    if (variants.length > 0) {
+      selectedVariant = { price_add: variants[0].price_add, label: `${variants[0].storage} · ${variants[0].color}` };
+    }
+    updateSummary();
   }
 
-  function selectDenom(price, label) {
-    selectedDenomPrice = price;
-    selectedDenomLabel = label;
+  function selectVariant(priceAdd, label) {
+    selectedVariant = { price_add: priceAdd, label };
+    updateSummary();
+  }
+
+  function updateCondition() {
+    currentCondition = document.querySelector('input[name="condition"]:checked').value;
     updateSummary();
   }
 
   function updateSummary() {
     if (!currentProduct) return;
-    document.getElementById('sum-game').textContent = currentProduct.name;
-    document.getElementById('sum-item').textContent = selectedDenomLabel || '—';
-    document.getElementById('sum-total').textContent = '₱' + selectedDenomPrice.toLocaleString('en-PH', {minimumFractionDigits:2});
+    const basePrice = currentCondition === 'brand_new'
+      ? parseFloat(currentProduct.original_price)
+      : parseFloat(currentProduct.secondhand_price || currentProduct.original_price);
+    const variantAdd = currentCondition === 'brand_new' ? (selectedVariant?.price_add || 0) : 0;
+    const total = basePrice + variantAdd;
+
+    document.getElementById('sum-device').textContent    = currentProduct.name;
+    document.getElementById('sum-variant').textContent   = selectedVariant?.label || '—';
+    document.getElementById('sum-condition').textContent = currentCondition === 'brand_new' ? 'Brand New' : 'Pre-Owned';
+    document.getElementById('sum-total').textContent     = '₱' + fmtNum(total);
+    document.getElementById('modal-base-price').value    = total;
+  }
+
+  function getTotal() {
+    return parseFloat(document.getElementById('modal-base-price').value) || 0;
   }
 
   /* ── CLOSE MODAL ── */
@@ -1248,42 +1600,42 @@
     if (e.target === this) closeModal();
   });
 
-  /* ── SUBMIT ORDER ── */
+  /* ── SUBMIT ── */
   async function submitOrder() {
-    const uid = document.getElementById('game-uid').value.trim();
-    const name = document.getElementById('customer-name').value.trim();
-    const email = document.getElementById('customer-email').value.trim();
+    const name    = document.getElementById('customer-name').value.trim();
+    const phone   = document.getElementById('customer-phone').value.trim();
+    const email   = document.getElementById('customer-email').value.trim();
+    const address = document.getElementById('delivery-address').value.trim();
 
-    if (!uid) { showToast('error','Missing Info','Please enter your Game User ID.'); return; }
-    if (!name) { showToast('error','Missing Info','Please enter your name.'); return; }
-    if (!email || !email.includes('@')) { showToast('error','Missing Info','Please enter a valid email.'); return; }
-    if (!selectedDenomPrice) { showToast('error','Missing Info','Please select a denomination.'); return; }
+    if (!name)    { showToast('error', 'Missing Info', 'Please enter your full name.'); return; }
+    if (!phone)   { showToast('error', 'Missing Info', 'Please enter your phone number.'); return; }
+    if (!email || !email.includes('@')) { showToast('error', 'Missing Info', 'Please enter a valid email.'); return; }
+    if (!address) { showToast('error', 'Missing Info', 'Please enter your delivery address.'); return; }
 
     const paymethod = document.querySelector('input[name="paymethod"]:checked').value;
-    const serverEl = document.getElementById('game-server');
-    const server = serverEl && serverEl.value ? serverEl.value : '';
+    const total     = getTotal();
 
     const payload = {
-      product_id:     currentProduct.id,
-      quantity:       1,
-      condition:      "original",
-      payment_method: paymethod,
-      customer_name:  name,
-      customer_email: email,
-      unit_price:     selectedDenomPrice,
-      total_price:    selectedDenomPrice,
-      game_uid:       uid,
-      game_server:    server,
-      denom_label:    selectedDenomLabel,
-      product_name:   currentProduct.name,
+      product_id:       currentProduct.id,
+      product_name:     currentProduct.name,
+      quantity:         1,
+      condition:        currentCondition,
+      payment_method:   paymethod,
+      customer_name:    name,
+      customer_email:   email,
+      customer_phone:   phone,
+      delivery_address: address,
+      unit_price:       total,
+      total_price:      total,
+      variant_label:    selectedVariant?.label || '',
     };
 
     const btn = document.getElementById('order-btn');
     btn.disabled = true;
-    btn.innerHTML = '<div class="spinner"></div> Processing...';
+    btn.innerHTML = '<div class="spinner"></div> Processing…';
 
     try {
-      const res = await fetch('/order', {
+      const res  = await fetch('/order', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(payload),
@@ -1292,7 +1644,7 @@
 
       if (data.success) {
         closeModal();
-        showToast('success', '⚡ Top-Up Sent!', data.message);
+        showToast('success', 'Order Placed!', data.message);
       } else {
         showToast('error', 'Failed', data.message || 'Please try again.');
       }
@@ -1300,30 +1652,23 @@
       showToast('error', 'Network Error', 'Could not reach the server.');
     } finally {
       btn.disabled = false;
-      btn.innerHTML = '⚡ Top Up Now';
+      btn.innerHTML = 'Place Order';
     }
   }
 
   /* ── HELPERS ── */
-  function getProductIndex(id) {
-    // map product ID to 1-6 for image cycling
-    const products = document.querySelectorAll('.game-card');
-    let idx = 1;
-    products.forEach((card, i) => {
-      const onclickStr = card.getAttribute('onclick') || '';
-      if (onclickStr.includes(id)) idx = (i % 6) + 1;
-    });
-    return idx;
+  function fmtNum(n) {
+    return Number(n).toLocaleString('en-PH', { minimumFractionDigits: 0, maximumFractionDigits: 0 });
   }
 
   function showToast(type, title, msg) {
     const toast = document.getElementById('toast');
     toast.className = 'toast ' + type;
-    document.getElementById('toast-icon').textContent = type === 'success' ? '✓' : '✕';
+    document.getElementById('toast-icon').textContent = type === 'success' ? '✓' : '!';
     document.getElementById('toast-title').textContent = title;
-    document.getElementById('toast-msg').textContent = msg;
+    document.getElementById('toast-msg').textContent   = msg;
     toast.classList.add('visible');
-    setTimeout(() => toast.classList.remove('visible'), 5000);
+    setTimeout(() => toast.classList.remove('visible'), 6000);
   }
 </script>
 </body>

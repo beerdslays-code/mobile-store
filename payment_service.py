@@ -1,15 +1,15 @@
 """
 payment_service.py
 -------------------
-Handles payment method validation and processing for GameTop.
+Handles payment method validation and processing for Pison Phone Store.
 In a real deployment, integrate PayMongo (PH) for GCash, cards, Maya, etc.
 """
 
 PAYMENT_METHODS = {
-    "gcash":          "GCash",
-    "credit_card":    "Credit / Debit Card",
-    "bank_transfer":  "Maya",
-    "cash":           "Cash on Delivery",
+    "gcash":         "GCash",
+    "credit_card":   "Credit / Debit Card",
+    "bank_transfer": "Maya",
+    "cash":          "Cash on Delivery",
 }
 
 
@@ -34,14 +34,17 @@ def process_payment(order_data: dict) -> dict:
     if not validate_payment_method(method):
         return {"success": False, "message": "Invalid payment method.", "transaction_ref": None}
 
-    game    = order_data.get("product_name", "your game")
-    denom   = order_data.get("denom_label", "selected pack")
-    game_uid = order_data.get("game_uid", "")
+    product  = order_data.get("product_name", "your phone")
+    variant  = order_data.get("denom_label", "")
+    customer = order_data.get("customer_name", "")
+    address  = order_data.get("game_server", "")
+
+    variant_str = f" ({variant})" if variant else ""
 
     if method == "cash":
         return {
             "success": True,
-            "message": f"Order placed! {denom} for {game} will be delivered to UID: {game_uid}.",
+            "message": f"Order placed! {product}{variant_str} will be delivered to {address}. Pay ₱{order_data.get('total_price', 0):,.2f} upon arrival.",
             "transaction_ref": None,
         }
 
@@ -50,6 +53,6 @@ def process_payment(order_data: dict) -> dict:
     label = PAYMENT_METHODS[method]
     return {
         "success": True,
-        "message": f"Payment received via {label} (Ref: {ref}). {denom} will be sent to {game} UID: {game_uid} shortly!",
+        "message": f"Payment confirmed via {label} (Ref: {ref}). Your {product}{variant_str} will be shipped to {address} within 1–3 business days.",
         "transaction_ref": ref,
     }

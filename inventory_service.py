@@ -31,7 +31,7 @@ def get_inventory_by_product(product_id: str) -> dict | None:
 def update_stock(product_id: str, condition: str, quantity_sold: int) -> bool:
     """
     Decrease stock after a successful order.
-    condition: 'original' or 'second_hand'
+    condition: 'brand_new' or 'second_hand'
     Returns True if successful.
     """
     supabase = get_supabase()
@@ -39,7 +39,7 @@ def update_stock(product_id: str, condition: str, quantity_sold: int) -> bool:
     if not inv:
         return False
 
-    field_name = "stock_original" if condition == "original" else "stock_secondhand"
+    field_name = "stock_original" if condition == "brand_new" else "stock_secondhand"
     new_stock = inv[field_name] - quantity_sold
 
     if new_stock < 0:
@@ -62,7 +62,7 @@ def restock(product_id: str, condition: str, quantity: int) -> bool:
     supabase = get_supabase()
     inv = get_inventory_by_product(product_id)
 
-    field_name = "stock_original" if condition == "original" else "stock_secondhand"
+    field_name = "stock_original" if condition == "brand_new" else "stock_secondhand"
 
     if inv:
         new_stock = inv[field_name] + quantity

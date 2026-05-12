@@ -3,294 +3,453 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Order History | GameTop</title>
+  <title>Order History — PISON</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;600;700;900&family=Syne:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;0,700;1,300;1,400&family=DM+Sans:ital,wght@0,300;0,400;0,500;0,600;1,300&family=DM+Mono:wght@300;400;500&display=swap" rel="stylesheet">
   <style>
     :root {
-      --bg: #08080f;
-      --surface: #0f0f1a;
-      --card: #111120;
-      --border: rgba(255,255,255,0.07);
-      --accent: #6366f1;
-      --accent-2: #a855f7;
-      --gold: #f59e0b;
-      --text: #f0f0ff;
-      --muted: #7878a0;
-      --success: #10b981;
-      --warning: #f59e0b;
-      --danger: #ef4444;
-      --radius: 16px;
+      --cream:       #F5F0E8;
+      --cream-dark:  #EDE7D9;
+      --parchment:   #E8DFC9;
+      --ink:         #1A1714;
+      --ink-light:   #2D2926;
+      --warm-grey:   #7A736A;
+      --warm-mid:    #4A4540;
+      --copper:      #B5733A;
+      --copper-light:#D4925A;
+      --copper-pale: rgba(181,115,58,0.10);
+      --white:       #FDFAF5;
+      --border:      rgba(26,23,20,0.10);
+      --border-mid:  rgba(26,23,20,0.18);
+      --success:     #2D7A4F;
+      --success-bg:  rgba(45,122,79,0.08);
+      --warning:     #B5733A;
+      --danger:      #B03A2E;
+      --radius:      4px;
+      --radius-lg:   12px;
+      --shadow-md:   0 8px 32px rgba(26,23,20,0.10);
     }
 
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
 
     body {
-      background: var(--bg);
-      color: var(--text);
-      font-family: 'Syne', sans-serif;
-      font-weight: 400;
+      background: var(--cream);
+      color: var(--ink);
+      font-family: 'DM Sans', sans-serif;
+      font-weight: 300;
       min-height: 100vh;
       -webkit-font-smoothing: antialiased;
     }
 
-    /* Noise */
-    body::before {
+    /* Grain */
+    body::after {
       content: '';
-      position: fixed; inset: 0; z-index: 0;
-      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E");
-      pointer-events: none;
+      position: fixed; inset: 0; z-index: 9999;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 512 512' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='g'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23g)' opacity='0.03'/%3E%3C/svg%3E");
+      pointer-events: none; opacity: 0.6;
     }
 
+    /* NAV */
     nav {
-      position: sticky; top: 0; z-index: 200;
+      position: sticky; top: 0; z-index: 500;
       display: flex; align-items: center; justify-content: space-between;
-      padding: 0 6vw; height: 72px;
-      background: rgba(8,8,15,0.88);
-      backdrop-filter: blur(24px);
+      padding: 0 6vw; height: 68px;
+      background: rgba(245,240,232,0.92);
+      backdrop-filter: blur(20px) saturate(160%);
       border-bottom: 1px solid var(--border);
     }
 
     .nav-logo {
-      font-family: 'Orbitron', monospace;
-      font-weight: 900; font-size: 1.35rem;
-      letter-spacing: 0.08em;
-      text-decoration: none;
-      background: linear-gradient(135deg, var(--accent), var(--accent-2));
-      -webkit-background-clip: text; -webkit-text-fill-color: transparent;
-      background-clip: text;
+      font-family: 'Cormorant Garamond', serif;
+      font-weight: 700; font-size: 1.6rem;
+      letter-spacing: 0.18em; text-transform: uppercase;
+      color: var(--ink); text-decoration: none;
     }
+    .nav-logo span { color: var(--copper); }
 
     .nav-back {
-      color: var(--muted); text-decoration: none;
-      font-size: 0.8rem; font-weight: 600;
-      letter-spacing: 0.1em; text-transform: uppercase;
+      display: flex; align-items: center; gap: 8px;
+      font-size: 0.7rem; font-weight: 500;
+      letter-spacing: 0.14em; text-transform: uppercase;
+      color: var(--warm-grey); text-decoration: none;
       transition: color 0.2s;
-      display: flex; align-items: center; gap: 6px;
     }
-    .nav-back:hover { color: var(--text); }
+    .nav-back:hover { color: var(--ink); }
+    .nav-back::before { content: '←'; }
 
+    /* PAGE */
     .page {
-      max-width: 1100px; margin: 0 auto;
-      padding: 60px 6vw 100px;
-      position: relative; z-index: 1;
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 72px 6vw 100px;
     }
 
+    /* Page header */
     .page-header {
-      display: flex; align-items: flex-end; justify-content: space-between;
-      margin-bottom: 48px; flex-wrap: wrap; gap: 20px;
+      display: grid;
+      grid-template-columns: 1fr auto;
+      align-items: flex-end;
+      margin-bottom: 52px;
+      padding-bottom: 28px;
+      border-bottom: 1px solid var(--border);
+      gap: 20px;
     }
 
-    .page-label {
-      font-size: 0.72rem; font-weight: 700;
-      letter-spacing: 0.22em; text-transform: uppercase;
-      color: var(--accent); margin-bottom: 10px;
+    .page-kicker {
+      font-family: 'DM Mono', monospace;
+      font-size: 0.62rem;
+      letter-spacing: 0.24em;
+      text-transform: uppercase;
+      color: var(--copper);
+      margin-bottom: 10px;
+      display: flex; align-items: center; gap: 10px;
+    }
+    .page-kicker::after {
+      content: '';
+      display: block; width: 32px; height: 1px;
+      background: var(--copper);
     }
 
     .page-title {
-      font-family: 'Orbitron', monospace;
-      font-size: clamp(1.5rem, 3vw, 2.2rem);
-      font-weight: 800;
+      font-family: 'Cormorant Garamond', serif;
+      font-size: clamp(2rem, 4vw, 3rem);
+      font-weight: 400;
+      line-height: 1.1;
+      color: var(--ink);
+    }
+    .page-title em { font-style: italic; color: var(--copper); }
+
+    .order-count-badge {
+      font-family: 'DM Mono', monospace;
+      font-size: 0.65rem;
+      letter-spacing: 0.14em;
+      color: var(--warm-grey);
+      border: 1px solid var(--border-mid);
+      border-radius: 100px;
+      padding: 7px 16px;
+      white-space: nowrap;
     }
 
-    .page-count {
-      background: rgba(99,102,241,0.1);
-      border: 1px solid rgba(99,102,241,0.25);
-      color: #a5b4fc;
-      font-size: 0.8rem; font-weight: 600;
-      padding: 8px 18px; border-radius: 100px;
-    }
-
-    /* Empty state */
+    /* Empty State */
     .empty-state {
-      text-align: center; padding: 100px 20px; color: var(--muted);
+      text-align: center;
+      padding: 100px 20px;
     }
-    .empty-icon { font-size: 4rem; margin-bottom: 20px; }
-    .empty-msg { font-size: 1.05rem; margin-bottom: 8px; color: var(--text); font-weight: 600; }
-    .empty-sub { font-size: 0.88rem; color: var(--muted); margin-bottom: 32px; }
-    .empty-link {
-      display: inline-flex; align-items: center; gap: 8px;
-      background: linear-gradient(135deg, var(--accent), var(--accent-2));
-      color: #fff;
-      text-decoration: none; padding: 14px 32px; border-radius: 12px;
-      font-size: 0.88rem; font-weight: 700; letter-spacing: 0.08em;
-      text-transform: uppercase;
-      transition: opacity 0.2s, transform 0.2s;
-    }
-    .empty-link:hover { opacity: 0.85; transform: translateY(-2px); }
 
-    /* Cards layout */
+    .empty-glyph {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 5rem;
+      color: var(--parchment);
+      line-height: 1;
+      margin-bottom: 24px;
+    }
+
+    .empty-title {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1.6rem; font-weight: 400;
+      color: var(--ink); margin-bottom: 10px;
+    }
+
+    .empty-sub {
+      font-size: 0.82rem; font-weight: 300;
+      color: var(--warm-grey); margin-bottom: 36px;
+    }
+
+    .btn-shop {
+      display: inline-flex; align-items: center; gap: 10px;
+      background: var(--ink); color: var(--cream);
+      font-family: 'DM Sans', sans-serif;
+      font-size: 0.7rem; font-weight: 500;
+      letter-spacing: 0.18em; text-transform: uppercase;
+      padding: 14px 32px;
+      border-radius: var(--radius);
+      text-decoration: none;
+      transition: all 0.3s;
+    }
+    .btn-shop:hover {
+      background: var(--copper);
+      transform: translateY(-1px);
+      box-shadow: 0 6px 20px rgba(181,115,58,0.3);
+    }
+
+    /* Orders list */
     .orders-list {
-      display: flex; flex-direction: column; gap: 16px;
+      display: flex; flex-direction: column;
+      gap: 1px;
+      background: var(--border);
+      border: 1px solid var(--border);
     }
 
     .order-card {
-      background: var(--card);
-      border: 1px solid var(--border);
-      border-radius: var(--radius);
-      padding: 22px 26px;
+      background: var(--white);
       display: grid;
-      grid-template-columns: auto 1fr auto;
-      gap: 20px;
+      grid-template-columns: 48px 1fr auto;
+      gap: 24px;
       align-items: center;
-      transition: border-color 0.25s, transform 0.25s;
-      animation: slideIn 0.4s ease both;
+      padding: 24px 28px;
+      transition: background 0.25s;
+      animation: slideUp 0.5s ease both;
+      position: relative;
     }
 
-    .order-card:nth-child(1) { animation-delay: 0.05s; }
-    .order-card:nth-child(2) { animation-delay: 0.1s; }
-    .order-card:nth-child(3) { animation-delay: 0.15s; }
-    .order-card:nth-child(4) { animation-delay: 0.2s; }
-    .order-card:nth-child(5) { animation-delay: 0.25s; }
-
-    @keyframes slideIn {
-      from { opacity: 0; transform: translateY(16px); }
-      to { opacity: 1; transform: translateY(0); }
+    .order-card::before {
+      content: '';
+      position: absolute;
+      left: 0; top: 0; bottom: 0;
+      width: 3px;
+      background: transparent;
+      transition: background 0.2s;
     }
 
-    .order-card:hover {
-      border-color: rgba(99,102,241,0.25);
-      transform: translateX(4px);
+    .order-card:hover { background: var(--cream); }
+    .order-card:hover::before { background: var(--copper); }
+
+    .order-card:nth-child(1) { animation-delay: 0.04s; }
+    .order-card:nth-child(2) { animation-delay: 0.08s; }
+    .order-card:nth-child(3) { animation-delay: 0.12s; }
+    .order-card:nth-child(4) { animation-delay: 0.16s; }
+    .order-card:nth-child(5) { animation-delay: 0.20s; }
+
+    @keyframes slideUp {
+      from { opacity: 0; transform: translateY(12px); }
+      to   { opacity: 1; transform: translateY(0); }
     }
 
-    .order-index {
-      font-family: 'JetBrains Mono', monospace;
-      font-size: 0.8rem; font-weight: 500;
-      color: var(--muted);
-      width: 32px; text-align: center;
+    .order-idx {
+      font-family: 'DM Mono', monospace;
+      font-size: 0.72rem;
+      color: var(--parchment);
+      text-align: center;
     }
 
     .order-info {}
 
-    .order-game {
-      font-family: 'Orbitron', monospace;
-      font-size: 0.95rem; font-weight: 700;
+    .order-device {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1.15rem; font-weight: 600;
+      color: var(--ink);
       margin-bottom: 6px;
     }
 
-    .order-meta {
-      display: flex; flex-wrap: wrap; gap: 8px; align-items: center;
+    .order-tags {
+      display: flex; flex-wrap: wrap; gap: 6px;
+      align-items: center;
+      margin-bottom: 6px;
     }
 
-    .badge {
-      display: inline-flex; align-items: center; gap: 4px;
-      font-size: 0.65rem; font-weight: 700;
-      letter-spacing: 0.1em; text-transform: uppercase;
-      padding: 4px 10px; border-radius: 6px;
+    .tag {
+      font-family: 'DM Mono', monospace;
+      font-size: 0.58rem;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      padding: 4px 9px;
+      border-radius: var(--radius);
+      border: 1px solid;
     }
 
-    .badge-gcash { background: rgba(0,155,228,0.12); color: #38bdf8; border: 1px solid rgba(0,155,228,0.2); }
-    .badge-cash { background: rgba(74,222,128,0.1); color: #4ade80; border: 1px solid rgba(74,222,128,0.2); }
-    .badge-card { background: rgba(251,191,36,0.1); color: #fbbf24; border: 1px solid rgba(251,191,36,0.2); }
-    .badge-bank { background: rgba(168,85,247,0.1); color: #c084fc; border: 1px solid rgba(168,85,247,0.2); }
-    .badge-pending { background: rgba(245,158,11,0.1); color: var(--warning); border: 1px solid rgba(245,158,11,0.2); }
-    .badge-confirmed { background: rgba(16,185,129,0.1); color: var(--success); border: 1px solid rgba(16,185,129,0.2); }
+    .tag-gcash     { color: #2980B9; border-color: rgba(41,128,185,0.25); background: rgba(41,128,185,0.06); }
+    .tag-card      { color: #7D6608; border-color: rgba(125,102,8,0.25);  background: rgba(125,102,8,0.06); }
+    .tag-maya      { color: #1E8449; border-color: rgba(30,132,73,0.25);  background: rgba(30,132,73,0.06); }
+    .tag-cash      { color: var(--warm-mid); border-color: var(--border-mid); background: var(--cream); }
+    .tag-pending   { color: var(--copper); border-color: rgba(181,115,58,0.3); background: rgba(181,115,58,0.06); }
+    .tag-confirmed { color: var(--success); border-color: rgba(45,122,79,0.3); background: var(--success-bg); }
+    .tag-shipped   { color: #1A5276; border-color: rgba(26,82,118,0.3); background: rgba(26,82,118,0.06); }
+    .tag-condition { color: var(--warm-grey); border-color: var(--border-mid); background: transparent; }
 
     .order-customer {
-      font-size: 0.8rem; color: var(--muted); margin-top: 4px;
+      font-size: 0.75rem; font-weight: 300;
+      color: var(--warm-grey);
     }
 
     .order-right {
       text-align: right; flex-shrink: 0;
     }
 
-    .order-total {
-      font-family: 'JetBrains Mono', monospace;
-      font-size: 1.2rem; font-weight: 500;
-      color: var(--gold);
-      margin-bottom: 6px;
+    .order-price {
+      font-family: 'DM Mono', monospace;
+      font-size: 1.1rem; font-weight: 400;
+      color: var(--copper);
+      margin-bottom: 4px;
     }
 
     .order-date {
-      font-size: 0.72rem; color: var(--muted);
+      font-size: 0.68rem;
+      font-weight: 300;
+      color: var(--warm-grey);
     }
 
-    .order-status-row {
-      display: flex; justify-content: flex-end; margin-top: 6px;
+    /* Summary bar */
+    .summary-bar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-top: 28px;
+      padding: 20px 28px;
+      background: var(--ink-light);
+      border-radius: var(--radius-lg);
+      flex-wrap: wrap; gap: 16px;
     }
 
+    .summary-bar-item {
+      text-align: center;
+    }
+
+    .summary-bar-val {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1.4rem; font-weight: 600;
+      color: var(--copper-light);
+    }
+
+    .summary-bar-lbl {
+      font-size: 0.62rem;
+      font-weight: 500;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: rgba(245,240,232,0.4);
+      margin-top: 3px;
+    }
+
+    /* Footer */
     footer {
-      border-top: 1px solid var(--border);
-      padding: 28px 6vw; color: var(--muted); font-size: 0.82rem;
-      background: rgba(0,0,0,0.3); position: relative; z-index: 1;
+      background: var(--ink-light);
+      border-top: 1px solid rgba(245,240,232,0.08);
+      padding: 32px 6vw;
+      display: flex; align-items: center; justify-content: space-between;
+      font-size: 0.68rem;
+      color: rgba(245,240,232,0.25);
+      flex-wrap: wrap; gap: 10px;
     }
 
-    @media (max-width: 640px) {
+    @media (max-width: 768px) {
       nav { padding: 0 4vw; }
-      .page { padding: 40px 4vw 80px; }
+      .page { padding: 48px 4vw 80px; }
+      .page-header { grid-template-columns: 1fr; }
+      .order-count-badge { display: none; }
       .order-card {
-        grid-template-columns: auto 1fr;
+        grid-template-columns: 36px 1fr;
         grid-template-rows: auto auto;
+        padding: 18px 18px;
       }
       .order-right {
         grid-column: 2;
         text-align: left;
+        margin-top: 8px;
       }
+      .summary-bar { flex-direction: column; text-align: center; }
     }
   </style>
 </head>
 <body>
 
 <nav>
-  <a class="nav-logo" href="/">GAMETOP</a>
-  <a class="nav-back" href="/">← Back to Games</a>
+  <a class="nav-logo" href="/">PIS<span>O</span>N</a>
+  <a class="nav-back" href="/"> Back to Shop</a>
 </nav>
 
 <div class="page">
   <div class="page-header">
     <div>
-      <div class="page-label">History</div>
-      <h1 class="page-title">Order History</h1>
+      <div class="page-kicker">Transaction Log</div>
+      <h1 class="page-title">Order <em>History</em></h1>
     </div>
     {% if orders %}
-    <div class="page-count">{{ orders | length }} order{{ 's' if orders | length != 1 }}</div>
+    <div class="order-count-badge">{{ orders | length }} order{{ 's' if orders | length != 1 }}</div>
     {% endif %}
   </div>
 
   {% if not orders %}
   <div class="empty-state">
-    <div class="empty-icon">🎮</div>
-    <div class="empty-msg">No orders yet.</div>
-    <div class="empty-sub">Start topping up your favorite games!</div>
-    <a href="/" class="empty-link">⚡ Browse Games</a>
+    <div class="empty-glyph">∅</div>
+    <div class="empty-title">No orders yet</div>
+    <div class="empty-sub">Your order history will appear here once you make a purchase.</div>
+    <a href="/" class="btn-shop">Browse Collection →</a>
   </div>
+
   {% else %}
   <div class="orders-list">
     {% for order in orders %}
     <div class="order-card">
-      <div class="order-index">#{{ loop.index }}</div>
+      <div class="order-idx">{{ "%02d" % loop.index }}</div>
+
       <div class="order-info">
-        <div class="order-game">{{ order.product_name }}</div>
-        <div class="order-meta">
+        <div class="order-device">{{ order.product_name }}</div>
+        <div class="order-tags">
           {% set pm = order.payment_method %}
           {% if pm == 'gcash' %}
-            <span class="badge badge-gcash">💙 GCash</span>
+            <span class="tag tag-gcash">GCash</span>
           {% elif pm == 'credit_card' %}
-            <span class="badge badge-card">💳 Card</span>
+            <span class="tag tag-card">Credit Card</span>
           {% elif pm == 'bank_transfer' %}
-            <span class="badge badge-bank">🟢 Maya</span>
+            <span class="tag tag-maya">Maya</span>
           {% else %}
-            <span class="badge badge-cash">💵 Cash</span>
+            <span class="tag tag-cash">Cash on Delivery</span>
           {% endif %}
 
           {% if order.status == 'confirmed' %}
-            <span class="badge badge-confirmed">✓ Confirmed</span>
+            <span class="tag tag-confirmed">Confirmed</span>
+          {% elif order.status == 'shipped' %}
+            <span class="tag tag-shipped">Shipped</span>
           {% else %}
-            <span class="badge badge-pending">⏳ {{ order.status | capitalize }}</span>
+            <span class="tag tag-pending">{{ order.status | capitalize }}</span>
+          {% endif %}
+
+          {% if order.condition %}
+          <span class="tag tag-condition">{{ order.condition | replace('_', ' ') | title }}</span>
+          {% endif %}
+
+          {% if order.denom_label %}
+          <span class="tag tag-condition">{{ order.denom_label }}</span>
           {% endif %}
         </div>
-        <div class="order-customer">{{ order.customer_name }} · {{ order.customer_email }}</div>
+        <div class="order-customer">
+          {{ order.customer_name }}
+          {% if order.customer_email %} · {{ order.customer_email }}{% endif %}
+          {% if order.game_server %} · {{ order.game_server }}{% endif %}
+        </div>
       </div>
+
       <div class="order-right">
-        <div class="order-total">₱{{ "%.2f"|format(order.total_price) }}</div>
+        <div class="order-price">₱{{ "{:,.2f}".format(order.total_price) }}</div>
         <div class="order-date">{{ order.created_at[:10] if order.created_at else '—' }}</div>
       </div>
     </div>
     {% endfor %}
   </div>
+
+  <!-- Summary bar -->
+  <div class="summary-bar">
+    <div class="summary-bar-item">
+      <div class="summary-bar-val">{{ orders | length }}</div>
+      <div class="summary-bar-lbl">Total Orders</div>
+    </div>
+    <div class="summary-bar-item">
+      <div class="summary-bar-val">
+        ₱{{ "{:,.0f}".format(orders | sum(attribute='total_price')) }}
+      </div>
+      <div class="summary-bar-lbl">Revenue</div>
+    </div>
+    <div class="summary-bar-item">
+      <div class="summary-bar-val">
+        {{ orders | selectattr('status', 'equalto', 'pending') | list | length }}
+      </div>
+      <div class="summary-bar-lbl">Pending</div>
+    </div>
+    <div class="summary-bar-item">
+      <div class="summary-bar-val">
+        {{ orders | selectattr('status', 'equalto', 'confirmed') | list | length }}
+      </div>
+      <div class="summary-bar-lbl">Confirmed</div>
+    </div>
+  </div>
+
   {% endif %}
 </div>
 
-<footer>© 2025 GameTop. School Project.</footer>
+<footer>
+  <span>© 2025 Pison Phone Store. School Project.</span>
+  <span>Flask · Supabase · Railway</span>
+</footer>
+
 </body>
 </html>
